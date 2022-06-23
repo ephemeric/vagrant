@@ -49,13 +49,10 @@ Vagrant.configure("2") do |config|
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
   #
-  # config.vm.provider "virtualbox" do |vb|
-  #   # Display the VirtualBox GUI when booting the machine
-  #   vb.gui = true
-  #
-  #   # Customize the amount of memory on the VM:
-  #   vb.memory = "1024"
-  # end
+  config.vm.provider "libvirt" do |lv|
+    lv.memory = 1024
+    lv.cpus = 4
+  end
   #
   # View the documentation for the provider you are using for more
   # information on available options.
@@ -63,8 +60,55 @@ Vagrant.configure("2") do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  # config.vm.provision "shell", inline: <<-SHELL
-  #   apt-get update
-  #   apt-get install -y apache2
-  # SHELL
+  config.vm.provision "shell", inline: <<-SHELL
+    hostnamectl set-hostname arch-02.ephemeric.lan
+    #rm -fr /etc/pacman.d/gnupg/
+    #pacman-key --init
+    #pacman-key --populate archlinux
+    pacman -S --noconfirm archlinux-keyring
+    pacman -Syu --noconfirm
+    pacman -Sy --noconfirm zsh
+    useradd -c "Robert Gabriel" -m -s /bin/zsh -G wheel robertg
+    sudo -iu robertg mkdir -m 0700 .ssh
+    echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEfW65k3s1uB63S5LGWc9Mh/w2L7mU9jHipKZAb1F/zc robert@imac.local" >~robertg/.ssh/authorized_keys
+    echo "robertg ALL=(ALL:ALL) NOPASSWD: ALL" >>/etc/sudoers.d/robertg
+    chmod 0400 /etc/sudoers.d/robertg
+    echo "-----BEGIN CERTIFICATE-----
+MIIGETCCA/mgAwIBAgIUVS+HdaeAQwbiqFA2c8uG2PiTg0swDQYJKoZIhvcNAQEL
+BQAwgZcxCzAJBgNVBAYTAlpBMRAwDgYDVQQIDAdHYXV0ZW5nMREwDwYDVQQHDAhQ
+cmV0b3JpYTEOMAwGA1UECgwFVW5pdDgxEDAOBgNVBAsMB0hhY2tpbmcxHDAaBgNV
+BAMME3NxdWlkLmVwaGVtZXJpYy5sYW4xIzAhBgkqhkiG9w0BCQEWFGVwaGVtZXJp
+Y0BpY2xvdWQuY29tMB4XDTIxMDYxODE2NTM1NloXDTIyMDYxODE2NTM1NlowgZcx
+CzAJBgNVBAYTAlpBMRAwDgYDVQQIDAdHYXV0ZW5nMREwDwYDVQQHDAhQcmV0b3Jp
+YTEOMAwGA1UECgwFVW5pdDgxEDAOBgNVBAsMB0hhY2tpbmcxHDAaBgNVBAMME3Nx
+dWlkLmVwaGVtZXJpYy5sYW4xIzAhBgkqhkiG9w0BCQEWFGVwaGVtZXJpY0BpY2xv
+dWQuY29tMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAsVkHlFN1Uct8
+baVkzALMztvkd0HtMp72wNiWgxn77ybRlSZn1UKZz1gIF9cVf2CzGQriLZIXWFwH
+lzoe6qAhl88M7/hKsfKbRJyG/bjpMOapktOgZcBKP6N12Kmw/87cmbzB6rasfPha
+j6qft4zpq8LG81skDwfAz6rHIyBv7TENZyksjdDU6QAImCez/ohq+/v04TWP2R+8
+Ew0n3uVMGnDm4Cwn0GsPt/wMQmabTia/W8odktqHmVHtJcwzV0wX4hY+MXbj14R8
+QtGTlLXYxw0WWiBn27aYrNkguVC/ZmGD8vRV1Z/7PSoyF/x9JPUbKbeFt2M1l2kX
+rDkdeR0dEnZwf/ttAvES9GAVofHkXFwqT8PCOeqACgCoAdfD01IDjZbgFzWkYGR6
+UxQThgPpNsdS8tSJBWkvoWf/Z1MOzvgomhVU+b/Q1+ex1f4WBypt5ZEu+UMUdXe8
+sFluL/YLNWh6lsCm8paTQX5k4ZAVkHrVyAHFXkxaFg7DuzNLkShWuciddXQxl5xE
+r9A4OBipr5lyWdmV6kjTtW2rb8quen5UBF27rpsLURjJchYGWDGLnwDrIGf+Mjkd
+qhy2CkUkN/xAyH/29Tu7/6MHIkhVEOHLu7QLuXqKTQwoDZ3mx8NM8F9BXTQ6elbS
+q66HMhgXyAaMmKtwiDCTgjwQMym6hu8CAwEAAaNTMFEwHQYDVR0OBBYEFPhRKzBt
+fDE5NXEamZ2urIsrJKNuMB8GA1UdIwQYMBaAFPhRKzBtfDE5NXEamZ2urIsrJKNu
+MA8GA1UdEwEB/wQFMAMBAf8wDQYJKoZIhvcNAQELBQADggIBAFCHO7ZVt1NjqzJ+
+/PvA9f3BQiIkI6ZY+R9P+kom7dYTyRWMi6lPMnHGMxYGNZBWuOcUaHgzjcj1jv9T
+GT3rUY2DeyEw3HrjTh3qS2MUWseIgBaDbVuHlIhn/ea/BZAYdFO4vV6uTR1/UEZA
+KoEsBh8znFg/57eYCz4bgOWpYZav0WDm1ZLp+JsWUsyYODgBc9Q+/2rmCLIc1U3K
+fb0ph7jycY+S5jHAtSPRehXye1KSTl300np6CZTO2duryM1heDJcEHUSwq8LXH2G
+MzDJxxWKGN7sUbUuOmj0GlnedZFJu23ahdL8SKnxcrjPTLBh/wyTFaoui2dGSu76
+OsnF+0r4tZpyFPsg5UGDn6jPW6XfHllvlPl3W/ox2t/nAbDuHFjBdMbflK68Idic
+fU9B5tN22zyYWYdmq0gv8PX6oW9M4pAu0m99uHSkeL4T1dP+36uJUrngSg+DjKZr
+uLAskBnni7NAmr15J+LAevAudEnAdPUFj4KxcIyJeOYMPoJM7FxQszF2N9AbCjeW
+q2ppi5pHtwNEuq0+6e/J3yXfPgjDl+1RgZ/f3Sn7p3SobMaed1nvSxQHZ1xQUJe7
+Z973Iq3e9e2jlJ86gyc7SDfZ0R9wHb7PbkXdpxi7ErFebaRK6a8se3OkMb43T1rO
+VwMLyhtPcrSCLqSDPL+AH3/sbq7e
+-----END CERTIFICATE-----" >/tmp/squid.pem
+    trust anchor /tmp/squid.pem
+    update-ca-trust
+  SHELL
 end
