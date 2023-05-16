@@ -2,17 +2,20 @@
 
 yum -y install zsh vim policycoreutils-python policycoreutils nmap telnet wget curl tcpdump
 
+#apt install zsh
+#groupadd -r wheel
+
 useradd -c "Robert Gabriel" -m -s /bin/zsh -G wheel robertg
 
 sudo -iu robertg mkdir -m 0700 .ssh
-
-echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEfW65k3s1uB63S5LGWc9Mh/w2L7mU9jHipKZAb1F/zc robert@imac.local" >~robertg/.ssh/authorized_keys
+echo "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIDKHz85P9rJczwjgMjJu47/iLXBxtfqoSlHXjEnT4ZuDAAAABHNzaDo= robertg@macbook.local" >~robertg/.ssh/authorized_keys
+chmod 0400 ~robertg/.ssh/authorized_keys
 
 echo "robertg ALL=(ALL:ALL) NOPASSWD: ALL" >>/etc/sudoers.d/robertg
-
 chmod 0400 /etc/sudoers.d/robertg
 
 mv /vagrant/.zsh* /vagrant/.iterm2* /vagrant/.vimrc /vagrant/.oh-my-zsh /vagrant/.gitconfig ~robertg
+#scp -r .zshrc .oh-my-zsh dest:
 
 chown -R robertg:robertg ~robertg
 
