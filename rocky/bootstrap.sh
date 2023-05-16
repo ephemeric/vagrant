@@ -1,6 +1,7 @@
 #!/bin/bash
 
 yum -y install zsh vim policycoreutils-python policycoreutils nmap telnet wget curl tcpdump
+apt-get -y install zsh
 
 #apt install zsh
 #groupadd -r wheel
@@ -13,6 +14,7 @@ chmod 0400 ~robertg/.ssh/authorized_keys
 
 echo "robertg ALL=(ALL:ALL) NOPASSWD: ALL" >>/etc/sudoers.d/robertg
 chmod 0400 /etc/sudoers.d/robertg
+validate sudo
 
 mv /vagrant/.zsh* /vagrant/.iterm2* /vagrant/.vimrc /vagrant/.oh-my-zsh /vagrant/.gitconfig ~robertg
 #scp -r .zshrc .oh-my-zsh dest:
@@ -54,9 +56,7 @@ q2ppi5pHtwNEuq0+6e/J3yXfPgjDl+1RgZ/f3Sn7p3SobMaed1nvSxQHZ1xQUJe7
 Z973Iq3e9e2jlJ86gyc7SDfZ0R9wHb7PbkXdpxi7ErFebaRK6a8se3OkMb43T1rO
 VwMLyhtPcrSCLqSDPL+AH3/sbq7e
 -----END CERTIFICATE-----" >/etc/pki/ca-trust/source/anchors/squid.pem
-
-update-ca-trust
-
+#update-ca-trust
 #echo 'proxy=http://192.168.121.1:3128' >>/etc/yum.conf
 
 exit 0
