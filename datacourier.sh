@@ -2,9 +2,11 @@
 
 set -xeuo pipefail
 
+# TODO: determine OS... do relevent tasks.
 sudo apt-get -y install rsync
 #sudo dnf -y install rsync
 
+# Portable for Rocky, Ubuntu, et al.
 getent passwd datacourier || sudo useradd -c 'Data Courier,,,,UMASK=077' -m -s /bin/bash datacourier
 
 ## Destination.
@@ -45,7 +47,7 @@ EOF
 
 sudo chmod 0400 /etc/ssh/sshd_config.d/10-datacourier.conf
 
-#crontab: cd /tmp && sudo -u postgres pg_dump hotrod_portal >hotrod_portal.sql; cd /home/datacourier && tar -cpf - -X /root/.local/share/tar/exclude /etc /root /home /opt/hotrod* /var/lib/{hotrod*,grafana,caddy} /var/spool/cron/crontabs | pigz --rsyncable --fast >data.tgz; rm -f /tmp/hotrod_portal.sql
+#crontab: cd /tmp && sudo -u postgres pg_dump hotrod_portal >hotrod_portal.sql; cd /home/datacourier && tar -cpf - -X /root/.local/share/tar/exclude /root/.local/share/tar/exclude /etc /root /home /opt/hotrod* /var/lib/{hotrod*,grafana,caddy} /var/spool/cron/crontabs | pigz --rsyncable --fast >data.tgz; rm -f /tmp/hotrod_portal.sql
 
 sudo sshd -t && sudo systemctl restart sshd
 

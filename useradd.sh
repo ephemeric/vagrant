@@ -2,11 +2,12 @@
 
 set -xeuo pipefail
 
+# TODO: determine OS... do relevent tasks.
 #dnf -y install zsh vim policycoreutils-python policycoreutils nmap telnet wget curl tcpdump
-#
 dpkg-query --show zsh || apt-get -y install zsh
 getent group wheel || groupadd -r wheel
 
+# Portable for Rocky, Ubuntu, et al.
 getent passwd robertg || useradd -c "Robert Gabriel" -m -s /bin/zsh -G wheel robertg
 
 sudo -iu robertg mkdir -p -m 0700 .ssh
@@ -17,7 +18,6 @@ echo "robertg ALL=(ALL:ALL) NOPASSWD: ALL" >/etc/sudoers.d/robertg
 chmod 0440 /etc/sudoers.d/robertg
 visudo -c
 
-#mv /vagrant/.zsh* /vagrant/.iterm2* /vagrant/.vimrc /vagrant/.oh-my-zsh /vagrant/.gitconfig ~robertg
 #scp -r .zshrc .oh-my-zsh dest:
 
 chown -R robertg:robertg ~robertg
