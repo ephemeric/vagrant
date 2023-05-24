@@ -1,1 +1,0 @@
-{"rsync":{"/upload":{"owner":"root","group":"root","guestpath":"/upload","hostpath":"/home/robertg/ephemeric/vagrant.git/hotrod/upload","disabled":false,"__vagrantfile":true}}}
