@@ -27,7 +27,8 @@ getent passwd datacourier || sudo useradd -c 'Data Courier,,,,UMASK=077' -m -s /
 #    PubkeyAuthentication yes
 #    IdentityFile ~/.ssh/id_ed25519
 #
-# crontab: rsync -ave ssh ops0.hotrod.app:data.tgz .
+# Happy with the `-v` as only single tarball and good for error checking.
+# 0 2 * * * cd ops0.hotrod.app && rsync -ave ssh ops0.hotrod.app:data.tgz .
 
 ## Source.
 sudo -iu datacourier mkdir -p -m 0700 .ssh
