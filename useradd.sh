@@ -5,6 +5,7 @@ set -xeuo pipefail
 # TODO: determine OS... do relevent tasks.
 #dnf -y install zsh vim policycoreutils-python policycoreutils nmap telnet wget curl tcpdump
 dpkg-query --show zsh || apt-get -y install zsh
+
 getent group wheel || groupadd -r wheel
 
 # Portable for Rocky, Ubuntu, et al.
