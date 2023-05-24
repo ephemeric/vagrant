@@ -1,3 +1,7 @@
+Acquire::http { Proxy "http://192.168.122.2:3128"; };
+Acquire::https { Proxy "DIRECT"; };
+#Acquire::Retries 0;
+
 echo "-----BEGIN CERTIFICATE-----
 MIIGETCCA/mgAwIBAgIUVS+HdaeAQwbiqFA2c8uG2PiTg0swDQYJKoZIhvcNAQEL
 BQAwgZcxCzAJBgNVBAYTAlpBMRAwDgYDVQQIDAdHYXV0ZW5nMREwDwYDVQQHDAhQ

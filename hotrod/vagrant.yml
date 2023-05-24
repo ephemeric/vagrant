@@ -1,0 +1,14 @@
+db:
+  ip_address: 192.168.4.14
+  artifacts_dir:
+    host: /Users/willie/myapp/db-scripts
+    guest: /opt/myapp/db
+
+api:
+  ip_address: 192.168.4.15
+  forwarded_port:
+    host: 9080
+    guest: 8080
+  artifacts_dir:
+    host: /Users/willie/myapp/artifacts
+    guest: /opt/myapp/api
