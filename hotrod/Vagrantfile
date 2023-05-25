@@ -1,307 +1,81 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-RG_PROXY = false
-RG_REGISTRY = false
+#ENV["PROXY"] = "slobwasherefromfile"
 BOX = "generic/ubuntu2204"
 VERSION = "4.2.16"
-DOMAIN = "hotrod.local"
+DOMAIN = ".hotrod.local"
 
 Vagrant.configure("2") do |config|
 
-    config.vm.box_check_update = false
+  config.vm.box_check_update = false
+  config.vm.provision "file", source: "setup.sh", destination: "/tmp/"
 
-    # config.vm.network "forwarded_port", guest: 5000, host: 5000, host_ip: "127.0.0.1"
-    # config.vm.network "private_network", ip: "192.168.33.10"
+  config.vm.provider "libvirt" do |l|
+      l.default_prefix = "hotrod_"
+      l.graphics_type = "none"
+      l.management_network_name = "default"
+      l.management_network_keep = true
+  end
 
-    config.vm.provision "file", source: "../scripts/download_install_hotrod.sh", destination: "/tmp/"
-    config.vm.provision "file", source: "../scripts/download_install_hotrod_agent.sh", destination: "/tmp/"
-    config.vm.provision "file", source: "scripts", destination: "/tmp/"
-
-    config.vm.provider "libvirt" do |l|
-        l.default_prefix = "hotrod_"
-        l.graphics_type = "none"
-        l.management_network_name = "default"
-        l.management_network_keep = true
-    end
-
-    config.vm.provider "vmware_desktop" do |v|
-        v.vmx["memsize"] = "1024"
-        v.vmx["numvcpus"] = "2"
-        v.vmx["virtualhw.version"] = "16"
-    end
-
-    config.vm.define "server" do |this|
-        this.vm.box = BOX
-        this.vm.box_version = VERSION
-        this.vm.hostname = "server" + DOMAIN
-        this.vm.network :private_network, \
-        :ip => "192.168.235.10", \
+    config.vm.define "rabbitmq" do |d|
+        d.vm.box = BOX
+        d.vm.box_version = VERSION
+        d.vm.hostname = "rabbitmq" + DOMAIN
+        d.vm.network :private_network, \
+        :ip => "192.168.235.22", \
         :libvirt__network_name => "hotrod", \
         :libvirt__dhcp_enabled => false, \
         :libvirt__always_destroy => true, \
         :libvirt__guest_ipv6 => false, \
         :libvirt__forward_mode => "veryisolated", \
         :libvirt__host_ip => "192.168.235.1"
-        this.vm.provider "vmware_desktop" do |v|
-            v.vmx["memsize"] = "3072"
-            v.base_mac = "000c2984db2f"
-            v.base_address = "192.168.235.10"
-        end
-        this.vm.provider "libvirt" do |l|
+        #d.vm.synced_folder "upload", "/upload", owner: "root", group: "root"
+        d.vm.provider "libvirt" do |l|
             l.memory = 2048
             l.cpus = 4
         end
-        this.vm.provision :shell, inline: <<-SHELL
-            # Update and install
-            apt-get update
-            apt-get install -y curl
-            cd /tmp
-            echo 'alias hlogin="hotrod login admin $(cat /var/local/hotrod/.password.secret)"' >> /etc/profile.d/hotrod.sh
-            sh scripts/install_osquery_ubuntu.sh
-            sh download_install_hotrod.sh dev
-            cp /tmp/scripts/env_hotrod_server /usr/local/etc/hotrod.env
-            sh /tmp/scripts/provision_hotrod_server.sh
-            cp /tmp/scripts/hotrod_profile.sh /etc/profile.d/hotrod_profile.sh
-            sh scripts/install_osquery_ubuntu.sh
-            sh scripts/install_suricata_ubuntu.sh
+        d.vm.provision :shell, :path => 'setup.sh', :args => ENV['PROXY']
+        d.vm.provision :shell, inline: <<-SHELL
+            export DEBIAN_FRONTEND=noninteractive
+            #mv /upload/10apt-cacher-ng.conf /etc/apt/apt.conf.d/10apt-cacher-ng
+            #apt-get update
+            #mkdir -m 0755 /etc/docker
+            #mv /upload/daemon.json /etc/docker/daemon.json
+            #apt-get -y install docker.io
+            ##systemctl reload docker
+            #docker pull 192.168.235.2:5000/nginx
         SHELL
-        this.vm.post_up_message = "Ready."
+        d.vm.post_up_message = "Ready."
     end
 
-    config.vm.define "suricata" do |this|
-        this.vm.box = BOX
-        this.vm.box_version = VERSION
-        this.vm.hostname = "suricata.local"
-        this.vm.provider "vmware_desktop" do |v|
-            v.vmx["memsize"] = "3072"
-            v.base_mac = "000c2984db2e"
-            v.base_address = "192.168.235.20"
-        this.vm.provision :shell, inline: <<-SHELL
-            # Update and install
-            apt-get update
-            apt-get install -y curl
-            cd /tmp
-            #sh scripts/enable_nftables.sh
-            sh scripts/install_osquery_ubuntu.sh
-            sh scripts/install_suricata_ubuntu.sh
-            sh download_install_hotrod_agent.sh dev
-            cp /tmp/scripts/env_hotrod_agent /usr/local/etc/hotrod_agent.env
-            sh /tmp/scripts/provision_hotrod_agent.sh
-            sh scripts/install_osquery_ubuntu.sh
-            sh scripts/install_suricata_ubuntu.sh
+    config.vm.define "rabbitmq1" do |d|
+        d.vm.box = BOX
+        d.vm.box_version = VERSION
+        d.vm.hostname = "rabbitmq1" + DOMAIN
+        d.vm.network :private_network, \
+        :ip => "192.168.235.23", \
+        :libvirt__network_name => "hotrod", \
+        :libvirt__dhcp_enabled => false, \
+        :libvirt__always_destroy => true, \
+        :libvirt__guest_ipv6 => false, \
+        :libvirt__forward_mode => "veryisolated", \
+        :libvirt__host_ip => "192.168.235.1"
+        #d.vm.synced_folder "upload", "/upload", owner: "root", group: "root"
+        d.vm.post_up_message = "Ready."
+        config.vm.provider "libvirt" do |l|
+            l.memory = 2048
+            l.cpus = 4
+        end
+        d.vm.provision :shell, inline: <<-SHELL
+            export DEBIAN_FRONTEND=noninteractive
+            #mv /upload/10apt-cacher-ng.conf /etc/apt/apt.conf.d/10apt-cacher-ng
+            #apt-get update
+            #mkdir -m 0755 /etc/docker
+            #mv /upload/daemon.json /etc/docker/daemon.json
+            #apt-get -y install docker.io
+            ##systemctl reload docker
+            #docker pull 192.168.235.2:5000/nginx
         SHELL
     end
-
-    config.vm.define "redpanda" do |this|
-        this.vm.box = BOX
-        this.vm.box_version = VERSION
-        this.vm.provider "vmware_desktop" do |v|
-            v.vmx["memsize"] = "3072"
-            v.base_mac = "000c2984db2c"
-            v.base_address = "192.168.235.21"
-        end
-        this.vm.hostname = "redpanda.local"
-        this.vm.provision :shell, inline: <<-SHELL
-            apt-get update
-            cd /tmp
-            sh scripts/install_redpanda_ubuntu.sh
-            sh download_install_hotrod_agent.sh dev
-            cp /tmp/scripts/env_hotrod_agent /usr/local/etc/hotrod_agent.env
-            # Replace ID with another number
-            sed -i /usr/local/etc/hotrod_agent.env -e "s/ID=001/ID=002/"
-            sh /tmp/scripts/provision_hotrod_agent.sh
-            sh scripts/install_osquery_ubuntu.sh
-            sh scripts/install_suricata_ubuntu.sh
-        SHELL
-    end
-
-    config.vm.define "rabbitmq" do |this|
-        this.vm.box = BOX
-        this.vm.box_version = VERSION
-        this.vm.hostname = "rabbitmq.local"
-        this.vm.provider "vmware_desktop" do |v|
-            v.vmx["memsize"] = "2048"
-            v.base_mac = "000c2984db29"
-            v.base_address = "192.168.235.22"
-        end
-        this.vm.provision :shell, inline: <<-SHELL
-            apt-get update
-            cd /tmp
-            sh download_install_hotrod_agent.sh dev
-            cp /tmp/scripts/env_hotrod_agent /usr/local/etc/hotrod_agent.env
-            # Replace ID with another number
-            sed -i /usr/local/etc/hotrod_agent.env -e "s/ID=001/ID=006/"
-            sh /tmp/scripts/provision_hotrod_agent.sh
-            sh scripts/install_osquery_ubuntu.sh
-            sh scripts/install_suricata_ubuntu.sh
-        SHELL
-        this.vm.provision "docker" do |d|
-          d.run "rabbitmq:3-management",
-            args: "--name rabbitmq --pull=always -p 15672:15672 -p 5672:5672",
-            daemonize: true,
-            restart: "on-failure"
-        end
-
-    end
-
-    config.vm.define "dashboard" do |this|
-        this.vm.box = BOX
-        this.vm.box_version = VERSION
-        this.vm.hostname = "dashboard.local"
-        this.vm.provider "vmware_desktop" do |v|
-            v.vmx["memsize"] = "2048"
-            v.base_mac = "000c2984db2b"
-            v.base_address = "192.168.235.31"
-        end
-        this.vm.provision :shell, inline: <<-SHELL
-            apt-get update
-            cd /tmp
-            sh download_install_hotrod_agent.sh dev
-            cp /tmp/scripts/env_hotrod_agent /usr/local/etc/hotrod_agent.env
-            # Replace ID with another number
-            sed -i /usr/local/etc/hotrod_agent.env -e "s/ID=001/ID=003/"
-            sh /tmp/scripts/provision_hotrod_agent.sh
-            sh scripts/install_osquery_ubuntu.sh
-            sh scripts/install_suricata_ubuntu.sh
-        SHELL
-        this.vm.provision "docker" do |d|
-          d.run "metabase", image: "metabase/metabase:latest",
-            args: "--pull=always -p 3000:3000 -v metabase:/metabase-data -e MB_DB_FILE=/metabase-data/metabase.db --name metabase",
-            daemonize: true,
-            restart: "on-failure"
-          d.run "materialize", image: "materialize/materialized:v0.10.0",
-            args: "--name materialize --pull=always -p 6875:6875",
-            cmd: "--workers 1",
-            daemonize: true,
-            restart: "on-failure"
-        end
-    end
-
-#     config.vm.define "grafana" do |this|
-#         this.vm.box = BOX
-#         this.vm.box_version = VERSION
-#         this.vm.hostname = "grafana.local"
-#         this.vm.provider "vmware_desktop" do |v|
-#             v.vmx["memsize"] = "2048"
-#             v.base_mac = "000c2984db2a"
-#             v.base_address = "192.168.235.32"
-#         end
-#         this.vm.provision :shell, inline: <<-SHELL
-#             apt-get update
-#             cd /tmp
-#             sh download_install_hotrod_agent.sh dev
-#             cp /tmp/scripts/env_hotrod_agent /usr/local/etc/hotrod_agent.env
-#             # Replace ID with another number
-#             sed -i /usr/local/etc/hotrod_agent.env -e "s/ID=001/ID=004/"
-#             sh /tmp/scripts/provision_hotrod_agent.sh
-#             sh /tmp/scripts/install_elasticsearch_ubuntu.sh
-#             sh scripts/install_osquery_ubuntu.sh
-#             sh scripts/install_suricata_ubuntu.sh
-#         SHELL
-#         this.vm.provision "docker" do |d|
-#           d.run "grafana", image: "grafana/grafana",
-#             args: "--name grafana --pull=always -p 3000:3000 -v grafana:/var/lib/grafana -e GF_SECURITY_ADMIN_PASSWORD=admin",
-#             daemonize: true,
-#             restart: "on-failure"
-#         end
-#     end
-
-    config.vm.define "redis" do |this|
-        this.vm.box = BOX
-        this.vm.box_version = VERSION
-        this.vm.hostname = "redis.local"
-        this.vm.provider "vmware_desktop" do |v|
-            v.vmx["memsize"] = "2048"
-            v.base_mac = "000c2984db28"
-            v.base_address = "192.168.235.33"
-        end
-        this.vm.provision :shell, inline: <<-SHELL
-            apt-get update
-            cd /tmp
-            sh download_install_hotrod_agent.sh dev
-            cp /tmp/scripts/env_hotrod_agent /usr/local/etc/hotrod_agent.env
-            # Replace ID with another number
-            sed -i /usr/local/etc/hotrod_agent.env -e "s/ID=001/ID=007/"
-            sh /tmp/scripts/provision_hotrod_agent.sh
-            sh scripts/install_osquery_ubuntu.sh
-            sh scripts/install_suricata_ubuntu.sh
-        SHELL
-        this.vm.provision "docker" do |d|
-          d.run "redis", image: "redis:6",
-            args: "--name redis --pull=always -p 6379:6379",
-            cmd: "redis-server --save 60 1 --loglevel warning",
-            daemonize: true,
-            restart: "on-failure"
-        end
-    end
-
-#     config.vm.define "testing" do |this|
-#         this.vm.box = BOX
-#         this.vm.box_version = VERSION
-#         this.vm.hostname = "test.local"
-#         this.vm.provider "vmware_desktop" do |v|
-#             v.vmx["memsize"] = "3072"
-#             v.base_mac = "000c2984db2d"
-#             v.base_address = "192.168.235.30"
-#         end
-#         this.vm.provision :shell, inline: <<-SHELL
-#             # Update and install
-#             apt-get update
-#             apt-get install -y curl
-#             cd /tmp
-#             sh scripts/install_testing_tools.sh
-#             sh download_install_hotrod_agent.sh dev
-#             cp /tmp/scripts/env_hotrod_agent /usr/local/etc/hotrod_agent.env
-#             # Replace ID with another number
-#             sed -i /usr/local/etc/hotrod_agent.env -e "s/ID=001/ID=005/"
-#             sh /tmp/scripts/provision_hotrod_agent.sh
-#             sh scripts/install_osquery_ubuntu.sh
-#             sh scripts/install_suricata_ubuntu.sh
-#         SHELL
-#     end
-
-    config.vm.define "pipes" do |this|
-        this.vm.box = BOX
-        this.vm.box_version = VERSION
-        this.vm.hostname = "pipes.local"
-        this.vm.provider "vmware_desktop" do |v|
-            v.vmx["memsize"] = "3072"
-            v.base_mac = "000c2984db1d"
-            v.base_address = "192.168.235.40"
-        end
-        this.vm.provision :shell, inline: <<-SHELL
-            # Update and install
-            apt-get update
-            apt-get install -y curl
-            cd /tmp
-            sh scripts/install_testing_tools.sh
-            sh download_install_hotrod_agent.sh dev
-            cp /tmp/scripts/env_hotrod_agent /usr/local/etc/hotrod_agent.env
-            # Replace ID with another number
-            sed -i /usr/local/etc/hotrod_agent.env -e "s/ID=001/ID=008/"
-            sh /tmp/scripts/provision_hotrod_agent.sh
-            sh scripts/install_osquery_ubuntu.sh
-            sh scripts/install_suricata_ubuntu.sh
-        SHELL
-    end
-
-#   # Copy your .gitconfig file so that your git credentials are correct
-#   if File.exists?(File.expand_path("~/.gitconfig"))
-#     config.vm.provision "file", source: "~/.gitconfig", destination: "~/.gitconfig"
-#   end
-#
-#   # Copy your ssh keys for github so that your git credentials work
-#   if File.exists?(File.expand_path("~/.ssh/id_rsa"))
-#     config.vm.provision "file", source: "~/.ssh/id_rsa", destination: "~/.ssh/id_rsa"
-#   end
-#   if File.exists?(File.expand_path("~/.ssh/id_rsa.pub"))
-#     config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/id_rsa.pub"
-#   end
-#
-#   # Copy your .vimrc file so that your VI editor looks nice
-#   if File.exists?(File.expand_path("~/.vimrc"))
-#     config.vm.provision "file", source: "~/.vimrc", destination: "~/.vimrc"
-#   end
-end
 end
