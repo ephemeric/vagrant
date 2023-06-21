@@ -9,18 +9,20 @@ deb http://za.archive.ubuntu.com/ubuntu/ jammy universe
 deb http://za.archive.ubuntu.com/ubuntu/ jammy-updates universe
 deb http://za.archive.ubuntu.com/ubuntu/ jammy multiverse
 deb http://za.archive.ubuntu.com/ubuntu/ jammy-updates multiverse
-deb http://za.archive.ubuntu.com/ubuntu/ jammy-backports main restricted universe multiverse
-deb http://za.archive.ubuntu.com/ubuntu/ jammy-security main restricted
 deb http://za.archive.ubuntu.com/ubuntu/ jammy-security universe
 deb http://za.archive.ubuntu.com/ubuntu/ jammy-security multiverse
 EOF
 
-cat >/etc/apt/apt.conf.d/10squid-proxy <<'EOF'
-Acquire::http { Proxy "http://proxy.ephemeric.lan:3128"; };
-Acquire::https { Proxy "DIRECT"; };
+cat >/etc/profile.d/proxy.sh <<'EOF'
+export http_proxy="http://proxy.ephemeric.lan:3128"
+export https_proxy="http://proxy.ephemeric.lan:3128"
+export no_proxy="hotrod.local,192.168.235.10,127.0.0.1,localhost"
 EOF
 
-if [[ ! -f /etc/docker/daemon.json ]]; then
+cat >/etc/apt/apt.conf.d/10squid-proxy <<'EOF'
+Acquire::http { Proxy "http://proxy.ephemeric.lan:3128"; };
+#Acquire::https { Proxy "DIRECT"; };
+EOF
 
 mkdir -pm 0755 /etc/docker/certs.d/{docker.io,registry-1.docker.io}
 
@@ -99,9 +101,43 @@ bw45O9+4WmoOES4TUVF3Oe/Mh9Ta/2nXvBJeOEGQjw==
 -----END CERTIFICATE-----
 EOF
 
-update-ca-certificates
-fi
+cat >/usr/local/share/ca-certificates/squid-proxy.crt <<'EOF'
+-----BEGIN CERTIFICATE-----
+MIIEDzCCAvegAwIBAgIUI1EFQsfLjKbFTBedIM2sJJ6Dqd4wDQYJKoZIhvcNAQEL
+BQAwgZYxCzAJBgNVBAYTAlpBMRAwDgYDVQQIDAdHYXV0ZW5nMREwDwYDVQQHDAhQ
+cmV0b3JpYTEOMAwGA1UECgwFVW5pdDgxEDAOBgNVBAsMB0hhY2tpbmcxHDAaBgNV
+BAMME3Byb3h5LmVwaGVtZXJpYy5sYW4xIjAgBgkqhkiG9w0BCQEWE2FkbWluQGVw
+aGVtZXJpYy5sYW4wHhcNMjMwNTIxMTkxMzI3WhcNMjQwNTIwMTkxMzI3WjCBljEL
+MAkGA1UEBhMCWkExEDAOBgNVBAgMB0dhdXRlbmcxETAPBgNVBAcMCFByZXRvcmlh
+MQ4wDAYDVQQKDAVVbml0ODEQMA4GA1UECwwHSGFja2luZzEcMBoGA1UEAwwTcHJv
+eHkuZXBoZW1lcmljLmxhbjEiMCAGCSqGSIb3DQEJARYTYWRtaW5AZXBoZW1lcmlj
+LmxhbjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAK7+CrDt1fwIun6d
+VJ4/JqG8tHpEtvPphWiOMBRsza+l9pXAqYt/FbwbiXs1Ap+GM8MzHsAXQkYwn/oy
+/XpzsdaT4a9siKCshfWTfHPTvOsWWXYmVmyuHWYFdlGaNhLRXNwiNH02xlqqHY3X
+AxvNk1LftgTWUyUrhW07arOuhtLP6bmBDx4dsM9qsctMbG5/yPpvchBk7JQU/Jl2
+6bVu1WCkIJRKWkybFbb9zbeJB+BJiEud16kTQ6gmj/lV4qWcTFpCS/FEbGZxLBvc
+LWqG5ybhyaHoO/UsQv9uMdXSCiaFv0/vLdra7uIYBGbkly3QbLpaShSKc1bKszMT
+29nYPj8CAwEAAaNTMFEwHQYDVR0OBBYEFN9YgBlRpLDLSPMXVYWjTHr26gYyMB8G
+A1UdIwQYMBaAFN9YgBlRpLDLSPMXVYWjTHr26gYyMA8GA1UdEwEB/wQFMAMBAf8w
+DQYJKoZIhvcNAQELBQADggEBAIKj4s445/85IFVtdL+X3aKGTCtim0TmyiyaFc1s
+I9sdiaE8LqQV/AlWGbiXzZylDf3IPW5pV/50z7c39vZAr2MxhHPVkPtSOUJTlNFS
+8j2xjJQB1bhIUsalpvRG3SVcpFMS2oOzqKLGXWNDaPmewtJBwEgcRaAQ1NSTvmBp
+Ubgfo49n4tf6FWCmaAQyNxOepm8UqVr7N/DIhYKkYM3wsX/N/DOKAqtKDppzY2WF
+ZvnGzbrmJ645nvVTUbqEQ0/cH2mk76a8X6cKgtZ0Uink8aqmrIKvx69jpM27YYnT
+4DjabnGpJ7oet9TBEsvPL/q6YZHpZTl1B5FB6FL8iQYmmbA=
+-----END CERTIFICATE-----
+EOF
+# TODO: fix this, don't ignore stderr.
+update-ca-certificates 2>/dev/null
 
+## TODO: Rocky9 et al.
+#cat >/etc/pki/ca-trust/source/anchors/squid-proxy.crt <<'EOF'
+#-----BEGIN CERTIFICATE-----
+#-----END CERTIFICATE-----
+#EOF
+#update-ca-trust
+
+## /etc/hosts
 grep -q "proxy.ephemeric.lan" /etc/hosts || cat >>/etc/hosts <<'EOF'
 192.168.122.2 proxy.ephemeric.lan
 EOF
