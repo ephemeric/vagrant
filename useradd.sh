@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -Eeuo pipefail
 
 # TODO: determine OS... do relevent tasks.
 #dnf -y install zsh vim policycoreutils-python policycoreutils nmap telnet wget curl tcpdump
-dpkg-query --show zsh || apt-get -y install zsh
+DEBIAN_FRONTEND="noninteractive" apt-get -y --quiet update >/dev/null
+dpkg -l zsh | grep -q "ii" || DEBIAN_FRONTEND="noninteractive" apt-get -y --quiet install zsh >/dev/null
 
 # Portable for Rocky, Ubuntu, et al.
 #getent group wheel || groupadd -r wheel
@@ -21,8 +22,6 @@ robertg ALL=(ALL:ALL) NOPASSWD: ALL
 EOF
 chmod 0440 /etc/sudoers.d/robertg
 visudo -c
-
-#scp -r .zshrc .oh-my-zsh dest:
 
 chown -R robertg:robertg ~robertg
 

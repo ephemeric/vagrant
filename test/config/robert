@@ -1,8 +1,14 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# `config.vm.synced_folder` runs before `config.vm.provision`!
 Vagrant.configure("2") do |config|
+        # Homedir.
+        if File.exists?(File.expand_path("~/upload"))
+            config.vm.synced_folder "~/upload", "/vagrant/robertg", type: "rsync"
+        end
+        # Proxy, useradd robertg, mv /vagrant/robertg/ ~robertg/.
         config.vm.provision :shell, inline: <<-SHELL
-            /vagrant/scripts/proxy.sh
+            /vagrant/scripts/proxy-useradd.sh
         SHELL
 end
