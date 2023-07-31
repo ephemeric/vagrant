@@ -145,8 +145,8 @@ EOF
 
 # TODO: determine OS... do relevent tasks.
 #dnf -y install zsh vim policycoreutils-python policycoreutils nmap telnet wget curl tcpdump
-DEBIAN_FRONTEND="noninteractive" apt-get -y --quiet update >/dev/null
-dpkg -l zsh | grep -q "ii" || DEBIAN_FRONTEND="noninteractive" apt-get -y --quiet install zsh >/dev/null
+DEBIAN_FRONTEND="noninteractive" apt-get -y --quiet update
+dpkg -l zsh | grep -q "ii" || DEBIAN_FRONTEND="noninteractive" apt-get -y --quiet install zsh
 
 # Portable for Rocky, Ubuntu, et al.
 #getent group wheel || groupadd -r wheel
