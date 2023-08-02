@@ -26,6 +26,7 @@ pipes: curl: (35) error:0A0000D9:SSL routines::unsolicited extension
 curl --write-out '%{http_code}' --output api_response --fail --location --connect-timeout 60 --retry-connrefused --retry 3 --retry-delay 5 --retry-max-time 60 --silent --show-error https://httpstat.us/200 >http_code
 ```
 
+<<<<<<< HEAD
 ```
 jasmine :: ~ % ll .vagrant.d/boxes/panoptix-VAGRANTSLASH-hotrod/0.0.1/libvirt/
 total 1.6G
@@ -42,3 +43,28 @@ generic/ubuntu2004 (libvirt, 4.2.16)
 generic/ubuntu2204 (libvirt, 4.2.16)
 panoptix/hotrod    (libvirt, 0.0.1)
 ```
+
+## Remove
+
+/etc/cloud/
+/run/utmp
+/var/lib/cloud/
+/var/lib/systemd/random-seed
+/var/log/wtmp
+/var/log/btmp
+/etc/systemd/resolved.conf
+/etc/systemd/resolved.conf.d/
+/etc/netplan/01-netcfg.yaml
+
+## Truncate
+
+## Disable services.
+
+## Generate files.
+
+## Purge packages.
+
+## Edit files.
+
+## Offline operations.
+vagrant destroy -f vagbox && vagrant up vagbox && vagrant halt vagbox && sudo virt-sysprep -d hotrod_vagbox --operations defaults,-ssh-userdir,-lvm-uuids --firstboot-command 'dpkg-reconfigure openssh-server' --run-command /vagrant/scripts/cleanup.sh && vagrant up vagbox && vagrant ssh vagbox
