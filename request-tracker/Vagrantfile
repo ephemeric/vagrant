@@ -1,0 +1,22 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+BOX = "generic/ubuntu2204"
+VERSION = "4.2.16"
+DOMAIN = ".ephemeric.lan"
+
+Vagrant.configure("2") do |config|
+  config.vm.box_check_update = false
+  config.vm.allow_hosts_modification = true
+  config.vm.box = BOX
+  config.vm.synced_folder "upload", "/vagrant", type: "rsync"
+  config.vm.provider "libvirt" do |l|
+      l.default_prefix = "ephemeric_"
+      l.graphics_type = "none"
+      l.management_network_name = "default"
+      l.management_network_keep = true
+  end
+end
+
+load "config/robert"
+load "config/request-tracker"

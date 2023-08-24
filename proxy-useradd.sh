@@ -166,7 +166,7 @@ visudo -c
 
 chown -R robertg:robertg ~robertg
 
-# Vagrant specific.
+# Vagrant specific. Not idempotent!
 cd /vagrant/robertg/
 mv * ~robertg/
 chown -R robertg:robertg ~robertg/

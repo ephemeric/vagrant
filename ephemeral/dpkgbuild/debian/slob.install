@@ -1,0 +1,3 @@
+slob-init/slob etc/default
+slob-init/99-slob.preset /usr/lib/systemd/system-preset
+slob usr/sbin

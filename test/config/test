@@ -20,7 +20,7 @@ Vagrant.configure("2") do |config|
             l.cpus = 4
         end
         d.vm.provision :shell, inline: <<-SHELL
-            hostnamectl set-hostname test.ephemeric.lan
+            #hostnamectl set-hostname test.ephemeric.lan
             id
         SHELL
     end

@@ -1,0 +1,15 @@
+Source: slob
+Section: net
+Priority: optional
+Maintainer: Robert Gabriel <slob@ephemeric.lan>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.6.0
+Homepage: https://slob.app
+Rules-Requires-Root: no
+
+Package: slob
+Architecture: amd64
+Depends: ${shlibs:Depends}, ${misc:Depends}, passwd, adduser
+Recommends: logrotate
+Suggests: apparmor
+Description: Slob is cool.

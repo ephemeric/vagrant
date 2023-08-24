@@ -1,0 +1,13 @@
+[Unit]
+Description=Slob
+After=network.target auditd.service
+
+[Service]
+EnvironmentFile=/etc/default/slob
+User=slob
+Group=slob
+ExecStart=/usr/sbin/slob
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
