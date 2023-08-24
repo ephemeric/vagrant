@@ -8,7 +8,6 @@ cd /vagrant
 
 cp scripts/EphemericCA.crt /usr/local/share/ca-certificates/
 
-# TODO: fix this, don't ignore stderr.
-update-ca-certificates &>/dev/null
+update-ca-certificates
 
 exit 0
