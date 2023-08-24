@@ -15,6 +15,6 @@ Vagrant.configure("2") do |config|
     # Proxy, useradd robertg, mv /vagrant/robertg/ ~robertg/.
     config.vm.provision :shell, inline: <<-SHELL
         cd /vagrant/
-        ./scripts/robertg.sh >/dev/null
+        ./scripts/proxy-useradd.sh >/dev/null
     SHELL
 end

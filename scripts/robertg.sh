@@ -1,7 +1,6 @@
 #!/bin/bash
 
-set -euo pipefail
-shopt -s dotglob failglob
+set -euo pipefail; shopt -s dotglob failglob
 
 grep -q "za.archive.ubuntu.com" /etc/apt/sources.list || cat >/etc/apt/sources.list <<'EOF'
 deb http://za.archive.ubuntu.com/ubuntu/ jammy main restricted
@@ -127,7 +126,6 @@ ZvnGzbrmJ645nvVTUbqEQ0/cH2mk76a8X6cKgtZ0Uink8aqmrIKvx69jpM27YYnT
 4DjabnGpJ7oet9TBEsvPL/q6YZHpZTl1B5FB6FL8iQYmmbA=
 -----END CERTIFICATE-----
 EOF
-# TODO: fix this, don't ignore stderr.
 update-ca-certificates
 
 ## TODO: Rocky9 et al.

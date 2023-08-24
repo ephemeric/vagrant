@@ -37,20 +37,8 @@ Vagrant.configure("2") do |config|
 end
 
 # Squid proxy for APT mirror and Docker pull-through proxy registry cache.
-load "config/robertg"
-# SB's prefs.
-#load "config/stephanb"
+load "config/proxy-useradd"
 # Machines.
-load "config/ansible"
-load "config/dashboard"
 load "config/generator"
-load "config/grafana"
-load "config/pipes"
-load "config/rabbitmq"
-load "config/redis"
-load "config/redpanda"
-load "config/server"
 load "config/splunk"
-load "config/suricata"
-load "config/testing"
 load "config/vagbox"
