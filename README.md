@@ -46,6 +46,7 @@ ephemeric/slob    (libvirt, 0.0.1)
 
 ## Remove
 
+/etc/machine-id
 /etc/cloud/
 /run/utmp
 /var/lib/cloud/
@@ -67,7 +68,12 @@ ephemeric/slob    (libvirt, 0.0.1)
 ## Edit files.
 
 ## Offline operations.
+
 vagrant destroy -f vagbox && vagrant up vagbox && vagrant halt vagbox && sudo virt-sysprep -d ephemeric_vagbox --operations defaults,-ssh-userdir,-lvm-uuids --firstboot-command 'dpkg-reconfigure openssh-server' --run-command /vagrant/scripts/cleanup.sh && vagrant up vagbox && vagrant ssh vagbox
+
+qemu-img convert -f qcow2 -O qcow2 ephemeric_test.img ephemeric_test.img.new
+
+mv ephemeric_test.img.new ~/.vagrant.d/~/.vagrant.d/boxes/ephemeric-VAGRANTSLASH-slob/0.0.1/libvirt/box.img
 
 ### Add VM
 
