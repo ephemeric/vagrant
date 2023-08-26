@@ -1,7 +1,0 @@
-# Splunk
-
-## Apps
-
-## Files
-
-## Misc

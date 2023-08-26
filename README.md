@@ -10,7 +10,7 @@ Add box, boot, scripts, cleanup.sh, offline utils, rebase, copy to version dir, 
 
 Copy config/<existing config> to config/<newvm>.
 
-Edit at a minimum after running `vagrantfile-utils.sh` to establish IP and MAC:
+Edit at a minimum after running `utils.sh` to establish IP and MAC:
 
 ```sh
 config.vm.define "<newvm>" do |this|

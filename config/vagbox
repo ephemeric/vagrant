@@ -31,7 +31,6 @@ Vagrant.configure("2") do |config|
             #./scripts/provision_splunk-app_fortigate.sh >/dev/null
             #./scripts/provision_splunk-input_hec.sh >/dev/null
             #./scripts/provision_splunk_docker.sh >/dev/null
-            #./scripts/cleanup.sh >/dev/null
             id
         SHELL
     end

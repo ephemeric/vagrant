@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-cd /vagrant/splunk/apps/
+cd /vagrant/splunk/etc/apps/
 
 mkdir -p hec/default
 

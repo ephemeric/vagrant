@@ -4,7 +4,7 @@ set -euo pipefail
 
 # TODO: create files in lab/splunk/apps/fortigate/.
 
-cd /vagrant/splunk/apps/
+cd /vagrant/splunk/etc/apps/
 
 mkdir -p fortigate/{default,samples}
 
