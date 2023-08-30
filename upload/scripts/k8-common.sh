@@ -24,6 +24,7 @@ swapoff -a
 
 # keeps the swap off during reboot
 (crontab -l 2>/dev/null; echo "@reboot /sbin/swapoff -a") | crontab - || true
+sed -i.bak -r 's/(.+ swap .+)/#\1/' /etc/fstab
 
 cat <<EOF | tee /etc/modules-load.d/crio.conf
 overlay
@@ -38,9 +39,7 @@ net.bridge.bridge-nf-call-iptables  = 1
 net.ipv4.ip_forward                 = 1
 net.bridge.bridge-nf-call-ip6tables = 1
 EOF
-# procps does not support systemd syntax!
-#sysctl --system
-/lib/systemd/systemd-sysctl /etc/sysctl.d/99-kubernetes-cri.conf
+sysctl -f /etc/sysctl.d/99-kubernetes-cri.conf
 
 cat <<EOF | tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
 deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/ /

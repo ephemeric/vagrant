@@ -5,10 +5,16 @@ set -euo pipefail
 NODENAME=$(hostname -s)
 
 __retval=0
-for i in {1..5}; do
-    kubeadm config images pull || __retval=1
+for i in {1..11}; do
+    kubeadm config images pull 2>/dev/null || __retval=1
     if [[ $__retval -ne 0 ]]; then
-        builtin echo "Retrying pull..."
+	if [[ $i -eq 11 ]]; then
+	    builtin echo "Fatal: pull failed after 10 tries."
+	    exit 1
+	else
+          builtin echo "Warn: pull $i failed. Retrying..." >&2
+	  sleep 5
+	fi
     else
         break
     fi
@@ -39,10 +45,8 @@ chmod +x $config_path/join.sh
 kubeadm token create --print-join-command > $config_path/join.sh
 
 # Install Calico Network Plugin
-
-curl --fail --location --connect-timeout 60 --retry-connrefused --retry 3 --retry-delay 5 --retry-max-time 60 --silent --show-error https://raw.githubusercontent.com/projectcalico/calico/v${CALICO_VERSION}/manifests/calico.yaml -O
-
-kubectl apply -f calico.yaml
+#curl --fail --location --connect-timeout 60 --retry-connrefused --retry 3 --retry-delay 5 --retry-max-time 60 --silent --show-error https://raw.githubusercontent.com/projectcalico/calico/v${CALICO_VERSION}/manifests/calico.yaml -O
+kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v${CALICO_VERSION}/manifests/calico.yaml
 
 sudo -iu vagrant bash <<EOF
 mkdir -p /home/vagrant/.kube
@@ -56,7 +60,8 @@ cp -i $config_path/config /home/robertg/.kube/
 sudo chown robertg:robertg /home/robertg/.kube/config
 EOF
 
-# Install Metrics Server
-kubectl apply -f https://raw.githubusercontent.com/techiescamp/kubeadm-scripts/main/manifests/metrics-server.yaml
+# Metrics server.
+METRICS_VERSION=$(grep -E '^\s*metrics:' /vagrant/settings.yaml | sed -E 's/[^:]+: *//')
+kubectl apply -f /vagrant/k8s/metrics-server-${METRICS_VERSION}.yaml
 
 exit 0

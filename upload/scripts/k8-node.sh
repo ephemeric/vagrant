@@ -8,13 +8,13 @@ config_path="/vagrant/configs"
 
 while [[ ! -f "$config_path/join.sh" ]]; do
     builtin echo "Waiting for join.sh..." >&2
-    sleep 5
+    sleep 10
 done
 
-while [[ ! -f "$config_path/config" ]]; do
-    builtin echo "Waiting for config..." >&2
-    sleep 5
-done
+#while [[ ! -f "$config_path/config" ]]; do
+#    builtin echo "Waiting for config..." >&2
+#    sleep 5
+#done
 
 /bin/bash $config_path/join.sh -v
 

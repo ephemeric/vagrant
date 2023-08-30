@@ -77,12 +77,11 @@ Vagrant.configure("2") do |config|
         ./scripts/k8-common.sh >/dev/null
         ./scripts/k8-node.sh >/dev/null
       SHELL
+      # Only install the dashboard after provisioning the last worker (and when enabled).
+      if i == NUM_WORKER_NODES and settings["software"]["dashboard"] and settings["software"]["dashboard"] != ""
+        node.vm.provision "shell", path: "upload/scripts/k8-dashboard.sh"
+      end
     end
 
-  # Only install the dashboard after provisioning the last worker (and when enabled).
-  if i == NUM_WORKER_NODES and settings["software"]["dashboard"] and settings["software"]["dashboard"] != ""
-    node.vm.provision "shell", path: "upload/scripts/k8-dashboard.sh"
   end
-
-  end
-end 
+end

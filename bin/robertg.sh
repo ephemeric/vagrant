@@ -17,6 +17,8 @@ cat >/etc/profile.d/proxy.sh <<'EOF'
 export http_proxy="http://proxy.ephemeric.lan:3128"
 export https_proxy="http://proxy.ephemeric.lan:3128"
 export no_proxy="127.0.0.1,localhost,master-node,worker-node01,worker-node02,worker-node03,ephemeric.lan,172.16.,172.17.,172.16.1.0/16,172.17.1.0/18,192.168.235.,192.168.235.0/24"
+export HTTP_PROXY="http://proxy.ephemeric.lan:3128"
+export HTTPS_PROXY="http://proxy.ephemeric.lan:3128"
 export NO_PROXY="127.0.0.1,localhost,master-node,worker-node01,worker-node02,worker-node03,ephemeric.lan,172.16.,172.17.,172.16.1.0/16,172.17.1.0/18,192.168.235.,192.168.235.0/24"
 EOF
 
@@ -160,7 +162,7 @@ dpkg -l zsh | grep -q "ii" || DEBIAN_FRONTEND="noninteractive" apt-get -y --quie
 #getent group wheel || groupadd -r wheel
 getent passwd robertg || useradd -c "Robert Gabriel" -m -s /bin/zsh robertg
 
-sudo -iu robertg mkdir -p -m 0700 .ssh
+sudo -iu robertg mkdir -p -m 0700 .ssh tmp
 echo "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIDKHz85P9rJczwjgMjJu47/iLXBxtfqoSlHXjEnT4ZuDAAAABHNzaDo= robertg@macbook.local" >~robertg/.ssh/authorized_keys
 chmod 0400 ~robertg/.ssh/authorized_keys
 

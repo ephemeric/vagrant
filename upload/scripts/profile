@@ -8,4 +8,6 @@ alias slob='sudo -i'
 alias robg='sudo -iu robertg'
 
 # k8s.
-alias k='kubectl'
+alias kc='kubectl'
+alias ka='kubeadm'
+alias kl='kubelet'

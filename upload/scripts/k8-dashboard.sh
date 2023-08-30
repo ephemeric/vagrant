@@ -51,10 +51,19 @@ EOF
 
   sudo -i -u vagrant kubectl apply -f "https://raw.githubusercontent.com/kubernetes/dashboard/v${DASHBOARD_VERSION}/aio/deploy/recommended.yaml"
 
-  sudo -i -u vagrant kubectl -n kubernetes-dashboard get secret/admin-user -o go-template="{{.data.token | base64decode}}" >> "${config_path}/token"
-  cat "${config_path}/token"
-  echo "
-Use it to log in at:
-http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/overview?namespace=kubernetes-dashboard
-"
+  sudo -i -u vagrant kubectl -n kubernetes-dashboard get secret/admin-user -o go-template="{{.data.token | base64decode}}" >>"${config_path}/token"
+
+  while sudo -i -u vagrant kubectl get pods -A -l k8s-app=kubernetes-dashboard | awk 'split($3, a, "/") && a[1] != a[2] { print $0; }' | grep -v "RESTARTS"; do
+    echo 'Waiting for kubernetes-dashboard to be ready...' >&2
+    sleep 5
+  done
+  sudo -i -u vagrant kubectl port-forward --address 0.0.0.0 -n kubernetes-dashboard services/kubernetes-dashboard 8080:443
+
+  cat "${config_path}/token" >&2
+
+  builtin echo
+
+  echo "http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/overview?namespace=kubernetes-dashboard" >&2
 fi
+
+exit 0
