@@ -2,6 +2,11 @@
 #
 # Not meant to be installed on machines. Copy files as required.
 
+#cp scripts/EphemericCA.crt /usr/local/share/ca-certificates/
+#update-ca-certificates
+# Workaround for pesky: "rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL"
+#cat scripts/EphemericCA.crt >>/etc/ssl/certs/ca-certificates.crt
+
 set -euo pipefail
 
 # Generate a self-signed certificate

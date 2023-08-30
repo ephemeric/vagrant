@@ -24,8 +24,8 @@ Vagrant.configure("2") do |config|
         l.graphics_type = "none"
         l.management_network_name = "default"
         l.management_network_keep = true
-        l.memory = 1024
-        l.cpus = 4
+        l.memory = 8192
+        l.cpus = 32
     end
 
     # VMWare.
@@ -39,6 +39,7 @@ end
 # Squid proxy for APT mirror and Docker pull-through proxy registry cache.
 load "config/robertg"
 # Machines.
+load "config/k8"
 load "config/generator"
 load "config/splunk"
 load "config/vagbox"

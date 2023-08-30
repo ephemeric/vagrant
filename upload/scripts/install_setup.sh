@@ -2,12 +2,15 @@
 
 # All VMs.
 # `config.vm.allow_hosts_modification=false` is needed (/etc/hosts untouched) but does not set hostname.
-hostnamectl set-hostname "$1"
+if [[ -n "$1" ]]; then
+    hostnamectl set-hostname "$1"
+fi
 
 cd /vagrant/
 
 ## APT.
-DEBIAN_FRONTEND="noninteractive" apt-get -y --quiet update >/dev/null
+DEBIAN_FRONTEND="noninteractive" apt-get -y --quiet update
+DEBIAN_FRONTEND="noninteractive" apt-get -y --quiet install apt-transport-https ca-certificates curl jq
 
 ## Poor man's DNS. Robust, no server or mucking about with systemd-resolved.
 cat >>/etc/hosts <<'EOF'
@@ -37,15 +40,22 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOYrfL9LJVoZV/C79LRSy6WTYT5kYkBYSTVtjjc9Atrv
 EOF
 
 ## CA cert. See `provision_ca_certs.sh`.
-cp scripts/EphemericCA.crt /usr/local/share/ca-certificates/
-# TODO: fix this, don't ignore stderr.
-update-ca-certificates &>/dev/null
+#cp scripts/EphemericCA.crt /usr/local/share/ca-certificates/
+#update-ca-certificates
+# Workaround for pesky: "rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL"
+#cat scripts/EphemericCA.crt >>/etc/ssl/certs/ca-certificates.crt
 
 ## Per VM specific.
 ### Generator.
 if [[ "$1" == "generator" ]]; then
-    # To splunk machine.
+    # To Splunk.
     (crontab -lu vagrant 2>/dev/null || true; builtin echo '* * * * * rsync -ae "ssh -i .ssh/id_ed25519 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" /vagrant/log-generator/destination splunk.ephemeric.lan:/vagrant/log-generator/ || true') | crontab -u vagrant -
+fi
+
+### master-node
+if [[ "$1" == "master-node" ]]; then
+    # To worker nodes.
+    (crontab -lu vagrant 2>/dev/null || true; builtin echo '* * * * * rsync -ae "ssh -i .ssh/id_ed25519 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" /vagrant/configs worker-node01:/vagrant/ || true') | crontab -u vagrant -
 fi
 
 exit 0

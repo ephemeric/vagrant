@@ -16,11 +16,20 @@ EOF
 cat >/etc/profile.d/proxy.sh <<'EOF'
 export http_proxy="http://proxy.ephemeric.lan:3128"
 export https_proxy="http://proxy.ephemeric.lan:3128"
-export no_proxy="ephemeric.lan,127.0.0.1,localhost"
+export no_proxy="127.0.0.1,localhost,master-node,worker-node01,worker-node02,worker-node03,ephemeric.lan,172.16.,172.17.,172.16.1.0/16,172.17.1.0/18,192.168.235.,192.168.235.0/24"
+export NO_PROXY="127.0.0.1,localhost,master-node,worker-node01,worker-node02,worker-node03,ephemeric.lan,172.16.,172.17.,172.16.1.0/16,172.17.1.0/18,192.168.235.,192.168.235.0/24"
 EOF
 
 cat >/etc/apt/apt.conf.d/10squid-proxy <<'EOF'
 Acquire::http { Proxy "http://proxy.ephemeric.lan:3128"; };
+Acquire::Retries "10";
+Acquire::http::Timeout "60";
+Acquire::https::Timeout "60";
+APT::Get::Assume-Yes "true";
+APT::Install-Recommends "false";
+APT::Install-Suggests "false";
+Debug::Acquire::http "false";
+Debug::Acquire::https "false";
 EOF
 
 mkdir -pm 0755 /etc/docker/certs.d/{docker.io,registry-1.docker.io}
@@ -77,6 +86,7 @@ bw45O9+4WmoOES4TUVF3Oe/Mh9Ta/2nXvBJeOEGQjw==
 -----END CERTIFICATE-----
 EOF
 
+#cat >/etc/ssl/certs/ca-certificates.crt <<'EOF'
 cat >/usr/local/share/ca-certificates/registry-mirror.crt <<'EOF'
 -----BEGIN CERTIFICATE-----
 MIIDSzCCAjOgAwIBAgIUdTPONst38MbxxIjstBYgJmB5cZ4wDQYJKoZIhvcNAQEL
@@ -100,6 +110,7 @@ bw45O9+4WmoOES4TUVF3Oe/Mh9Ta/2nXvBJeOEGQjw==
 -----END CERTIFICATE-----
 EOF
 
+#cat >/etc/ssl/certs/ca-certificates.crt <<'EOF'
 cat >/usr/local/share/ca-certificates/squid-proxy.crt <<'EOF'
 -----BEGIN CERTIFICATE-----
 MIIEDzCCAvegAwIBAgIUI1EFQsfLjKbFTBedIM2sJJ6Dqd4wDQYJKoZIhvcNAQEL
@@ -126,7 +137,7 @@ ZvnGzbrmJ645nvVTUbqEQ0/cH2mk76a8X6cKgtZ0Uink8aqmrIKvx69jpM27YYnT
 4DjabnGpJ7oet9TBEsvPL/q6YZHpZTl1B5FB6FL8iQYmmbA=
 -----END CERTIFICATE-----
 EOF
-update-ca-certificates
+update-ca-certificates 2>/dev/null
 
 ## TODO: Rocky9 et al.
 #cat >/etc/pki/ca-trust/source/anchors/squid-proxy.crt <<'EOF'

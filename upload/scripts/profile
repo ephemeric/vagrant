@@ -6,3 +6,6 @@ alias jtail='journalctl -efu'
 # Don't ask.
 alias slob='sudo -i'
 alias robg='sudo -iu robertg'
+
+# k8s.
+alias k='kubectl'
