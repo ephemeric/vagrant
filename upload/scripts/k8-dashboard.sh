@@ -57,7 +57,7 @@ EOF
     echo 'Waiting for kubernetes-dashboard to be ready...' >&2
     sleep 5
   done
-  sudo -i -u vagrant kubectl port-forward --address 0.0.0.0 -n kubernetes-dashboard services/kubernetes-dashboard 8080:443
+  sudo -i -u vagrant kubectl port-forward --address 0.0.0.0 -n kubernetes-dashboard services/kubernetes-dashboard 8080:443 &
 
   cat "${config_path}/token" >&2
 
