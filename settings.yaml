@@ -5,7 +5,7 @@
 environment: |
   HTTP_PROXY="http://proxy.ephemeric.lan:3128"
   HTTPS_PROXY="http://proxy.ephemeric.lan:3128"
-  NO_PROXY="127.0.0.1,localhost,master-node,worker-node01,worker-node02,worker-node03,ephemeric.lan,172.16.,172.17.,172.16.1.0/16,172.17.1.0/18,192.168.235.,192.168.235.0/24"
+  NO_PROXY="registry.k8s.io,127.0.0.1,localhost,master-node,worker-node01,worker-node02,worker-node03,ephemeric.lan,172.16.,172.17.,172.16.1.0/16,172.17.1.0/18,192.168.235.,192.168.235.0/24"
 
 network:
   # Worker IPs are incremented from control_ip.

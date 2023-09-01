@@ -16,10 +16,10 @@ EOF
 cat >/etc/profile.d/proxy.sh <<'EOF'
 export http_proxy="http://proxy.ephemeric.lan:3128"
 export https_proxy="http://proxy.ephemeric.lan:3128"
-export no_proxy="127.0.0.1,localhost,master-node,worker-node01,worker-node02,worker-node03,ephemeric.lan,172.16.,172.17.,172.16.1.0/16,172.17.1.0/18,192.168.235.,192.168.235.0/24"
+export no_proxy="registry.k8s.io,127.0.0.1,localhost,master-node,worker-node01,worker-node02,worker-node03,ephemeric.lan,172.16.,172.17.,172.16.1.0/16,172.17.1.0/18,192.168.235.,192.168.235.0/24"
 export HTTP_PROXY="http://proxy.ephemeric.lan:3128"
 export HTTPS_PROXY="http://proxy.ephemeric.lan:3128"
-export NO_PROXY="127.0.0.1,localhost,master-node,worker-node01,worker-node02,worker-node03,ephemeric.lan,172.16.,172.17.,172.16.1.0/16,172.17.1.0/18,192.168.235.,192.168.235.0/24"
+export NO_PROXY="registry.k8s.io,127.0.0.1,localhost,master-node,worker-node01,worker-node02,worker-node03,ephemeric.lan,172.16.,172.17.,172.16.1.0/16,172.17.1.0/18,192.168.235.,192.168.235.0/24"
 EOF
 
 cat >/etc/apt/apt.conf.d/10squid-proxy <<'EOF'
@@ -150,7 +150,9 @@ update-ca-certificates 2>/dev/null
 
 ## /etc/hosts
 grep -q "proxy.ephemeric.lan" /etc/hosts || cat >>/etc/hosts <<'EOF'
-192.168.122.2 proxy.ephemeric.lan
+192.168.122.2 proxy.ephemeric.lan proxy
+192.168.122.3 registry.ephemeric.lan registry
+192.168.122.4 registry.k8s.io
 EOF
 
 # TODO: determine OS... do relevent tasks.
