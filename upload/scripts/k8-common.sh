@@ -5,11 +5,9 @@
 set -Eeuo pipefail
 
 export DEBIAN_FRONTEND="noninteractive"
+__CURLOPTS="--fail --location --connect-timeout 60 --retry-connrefused --retry 3 --retry-delay 5 --retry-max-time 60 --silent --show-error"
 
-# Install CRI-O Runtime
-VERSION="$(echo ${KUBERNETES_VERSION} | grep -oE '[0-9]+\.[0-9]+')"
-
-# DNS Setting
+# DNS.
 if [ ! -d /etc/systemd/resolved.conf.d ]; then
     mkdir /etc/systemd/resolved.conf.d/
 fi
@@ -20,9 +18,8 @@ EOF
 
 systemctl --quiet restart systemd-resolved
 
+# Swap.
 swapoff -a
-
-# keeps the swap off during reboot
 (crontab -l 2>/dev/null; echo "@reboot /sbin/swapoff -a") | crontab - || true
 sed -i.bak -r 's/(.+ swap .+)/#\1/' /etc/fstab
 
@@ -33,7 +30,7 @@ EOF
 modprobe overlay
 modprobe br_netfilter
 
-# Set up required sysctl params, these persist across reboots.
+# Sysctl.
 cat <<EOF | tee /etc/sysctl.d/99-kubernetes-cri.conf
 net.bridge.bridge-nf-call-iptables  = 1
 net.ipv4.ip_forward                 = 1
@@ -41,25 +38,27 @@ net.bridge.bridge-nf-call-ip6tables = 1
 EOF
 sysctl -f /etc/sysctl.d/99-kubernetes-cri.conf
 
+# Repos.
+curl $__CURLOPTS https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/Release.key | gpg --dearmor | tee /etc/apt/trusted.gpg.d/devel_kubic_libcontainers_stable.gpg
 cat <<EOF | tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
-deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/ /
+deb [signed-by=/etc/apt/trusted.gpg.d/devel_kubic_libcontainers_stable.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/ /
 EOF
 
-cat <<EOF | tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:$VERSION.list
-deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$VERSION/$OS/ /
+curl $__CURLOPTS https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$KUBERNETES_VERSION/$OS/Release.key | gpg --dearmor | tee /etc/apt/trusted.gpg.d/devel_kubic_libcontainers_stable_cri-o_$KUBERNETES_VERSION.gpg
+cat <<EOF | tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:$KUBERNETES_VERSION.list
+deb [signed-by=/etc/apt/trusted.gpg.d/devel_kubic_libcontainers_stable_cri-o_$KUBERNETES_VERSION.gpg] http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$KUBERNETES_VERSION/$OS/ /
 EOF
 
-echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | tee /etc/apt/sources.list.d/kubernetes.list
-
-curl --fail --location --connect-timeout 60 --retry-connrefused --retry 3 --retry-delay 5 --retry-max-time 60 --silent --show-error https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/Release.key | gpg --dearmor | tee /etc/apt/trusted.gpg.d/devel_kubic_libcontainers_stable.gpg
-
-curl --fail --location --connect-timeout 60 --retry-connrefused --retry 3 --retry-delay 5 --retry-max-time 60 --silent --show-error https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$VERSION/$OS/Release.key | gpg --dearmor | tee /etc/apt/trusted.gpg.d/devel_kubic_libcontainers_stable_cri-o_$VERSION.gpg
-
-curl --fail --location --connect-timeout 60 --retry-connrefused --retry 3 --retry-delay 5 --retry-max-time 60 --silent --show-error https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg
+curl $__CURLOPTS https://pkgs.k8s.io/core:/stable:/v${KUBERNETES_VERSION}/deb/Release.key | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/kubernetes-apt-keyring.gpg
+cat <<EOF | tee /etc/apt/sources.list.d/kubernetes.list
+deb [signed-by=/etc/apt/trusted.gpg.d/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v${KUBERNETES_VERSION}/deb/ /
+EOF
 
 apt-get update
 
-apt-get -y install cri-o cri-o-runc kubelet="$KUBERNETES_VERSION" kubectl="$KUBERNETES_VERSION" kubeadm="$KUBERNETES_VERSION"
+# Install.
+#apt-get -y install cri-o cri-o-runc kubelet="$PKG_KUBERNETES_VERSION" kubectl="$PKG_KUBERNETES_VERSION" kubeadm="$PKG_KUBERNETES_VERSION"
+apt-get -y install cri-o cri-o-runc kubelet kubectl kubeadm
 
 cat >>/etc/default/crio <<EOF
 ${ENVIRONMENT}

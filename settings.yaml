@@ -28,5 +28,6 @@ software:
   calico: 3.26.0
   metrics: 0.6.4
   dashboard: 2.7.0
-  kubernetes: 1.27.2-00
+  # `v1.27` for gpg curl, repo, `apt-get install kubeadm=1.27.5-1.1`.
+  kubernetes: 1.27
   os: xUbuntu_22.04
