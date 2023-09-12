@@ -34,15 +34,62 @@ Debug::Acquire::http "false";
 Debug::Acquire::https "false";
 EOF
 
-mkdir -pm 0755 /etc/docker/certs.d/{docker.io,registry-1.docker.io}
-
+#mkdir -pm 0755 /etc/docker/certs.d/{docker.io,registry-1.docker.io}
+mkdir -pm 0755 /etc/docker
 cat >/etc/docker/daemon.json <<'EOF'
 {
-  "registry-mirrors": ["https://proxy.ephemeric.lan"]
+  "registry-mirrors": ["https://registry.ephemeric.lan"]
 }
 EOF
+## TODO: not seen via `update-ca-certificates`.
+#cat >/etc/docker/certs.d/docker.io/ca.crt <<'EOF'
+#-----BEGIN CERTIFICATE-----
+#MIIDSzCCAjOgAwIBAgIUdTPONst38MbxxIjstBYgJmB5cZ4wDQYJKoZIhvcNAQEL
+#BQAwFjEUMBIGA1UEAwwLRWFzeS1SU0EgQ0EwHhcNMjEwNjE4MTQzMjI2WhcNMzEw
+#NjE2MTQzMjI2WjAWMRQwEgYDVQQDDAtFYXN5LVJTQSBDQTCCASIwDQYJKoZIhvcN
+#AQEBBQADggEPADCCAQoCggEBAKRB+oO9eTvldeY7hbDmDcGA9aUDBQwTOaSZ/D3S
+#qhMMQ5kNTjIYP/YTPtGfJ+CKydaKp/CZoqdL3oSVol078ycHTgLJBMHSyEWDtkZw
+#/To0bbh/Q8ZpRVqjExbuYxDgPn70ucyeAHzUlGYMs56urhKtTvTHPljsa13EIwu0
+#IJC/TXwoIZ9yv8OtazI3TWb3jLCdDb7Ej7Kq1ExjWkVNqzzh3e63TkGqTtJO/nDj
+#NB1jXe27mkDuBGyAf53Jcyfvhom4ELRpQRTpsfQC6lfvK2m7sC9toGK/98vvMPko
+#xQhfk6aJ/rltPLtoof4kcEZ+qntyo8SdTq37DdqkSkaK7S0CAwEAAaOBkDCBjTAd
+#BgNVHQ4EFgQUNcGEQoltzOIPDv6ZPVtNbEHkItswUQYDVR0jBEowSIAUNcGEQolt
+#zOIPDv6ZPVtNbEHkItuhGqQYMBYxFDASBgNVBAMMC0Vhc3ktUlNBIENBghR1M842
+#y3fwxvHEiOy0FiAmYHlxnjAMBgNVHRMEBTADAQH/MAsGA1UdDwQEAwIBBjANBgkq
+#hkiG9w0BAQsFAAOCAQEAd4DcPzINMA5il4/iNV5lDQwS5+o2h+dq95g+8hYPFkJg
+#y4onAGcdrIWi+2vBdd4WR6i908bHNXo7Rrftn4IzesA9+3Q2U2aUgYi9p+hGy3eZ
+#HhxdfAXLUnjVth+VsFas7ud5pcoN15DNMLM4qZQ6k+i8uW/WqZblimg9UfgdtfLP
+#iCeAvMOe2XHyOfoAXiUXg9RItPJK12wvUw2V1OCfADnnHDaNRG9sd+xH3TaoqQsj
+#sc3ysian/ruB6Sisqv3Lgd3pek7rPnvU/mw4wTACjyBnriZBhILu0/g349nyV3jF
+#bw45O9+4WmoOES4TUVF3Oe/Mh9Ta/2nXvBJeOEGQjw==
+#-----END CERTIFICATE-----
+#EOF
+## WORKAROUND: not seen via `update-ca-certificates`.
+#cat >/etc/docker/certs.d/registry-1.docker.io/ca.crt <<'EOF'
+#-----BEGIN CERTIFICATE-----
+#MIIDSzCCAjOgAwIBAgIUdTPONst38MbxxIjstBYgJmB5cZ4wDQYJKoZIhvcNAQEL
+#BQAwFjEUMBIGA1UEAwwLRWFzeS1SU0EgQ0EwHhcNMjEwNjE4MTQzMjI2WhcNMzEw
+#NjE2MTQzMjI2WjAWMRQwEgYDVQQDDAtFYXN5LVJTQSBDQTCCASIwDQYJKoZIhvcN
+#AQEBBQADggEPADCCAQoCggEBAKRB+oO9eTvldeY7hbDmDcGA9aUDBQwTOaSZ/D3S
+#qhMMQ5kNTjIYP/YTPtGfJ+CKydaKp/CZoqdL3oSVol078ycHTgLJBMHSyEWDtkZw
+#/To0bbh/Q8ZpRVqjExbuYxDgPn70ucyeAHzUlGYMs56urhKtTvTHPljsa13EIwu0
+#IJC/TXwoIZ9yv8OtazI3TWb3jLCdDb7Ej7Kq1ExjWkVNqzzh3e63TkGqTtJO/nDj
+#NB1jXe27mkDuBGyAf53Jcyfvhom4ELRpQRTpsfQC6lfvK2m7sC9toGK/98vvMPko
+#xQhfk6aJ/rltPLtoof4kcEZ+qntyo8SdTq37DdqkSkaK7S0CAwEAAaOBkDCBjTAd
+#BgNVHQ4EFgQUNcGEQoltzOIPDv6ZPVtNbEHkItswUQYDVR0jBEowSIAUNcGEQolt
+#zOIPDv6ZPVtNbEHkItuhGqQYMBYxFDASBgNVBAMMC0Vhc3ktUlNBIENBghR1M842
+#y3fwxvHEiOy0FiAmYHlxnjAMBgNVHRMEBTADAQH/MAsGA1UdDwQEAwIBBjANBgkq
+#hkiG9w0BAQsFAAOCAQEAd4DcPzINMA5il4/iNV5lDQwS5+o2h+dq95g+8hYPFkJg
+#y4onAGcdrIWi+2vBdd4WR6i908bHNXo7Rrftn4IzesA9+3Q2U2aUgYi9p+hGy3eZ
+#HhxdfAXLUnjVth+VsFas7ud5pcoN15DNMLM4qZQ6k+i8uW/WqZblimg9UfgdtfLP
+#iCeAvMOe2XHyOfoAXiUXg9RItPJK12wvUw2V1OCfADnnHDaNRG9sd+xH3TaoqQsj
+#sc3ysian/ruB6Sisqv3Lgd3pek7rPnvU/mw4wTACjyBnriZBhILu0/g349nyV3jF
+#bw45O9+4WmoOES4TUVF3Oe/Mh9Ta/2nXvBJeOEGQjw==
+#-----END CERTIFICATE-----
+#EOF
 
-cat >/etc/docker/certs.d/docker.io/ca.crt <<'EOF'
+# Easy-RSA CA cert.
+cat >/usr/local/share/ca-certificates/easy-rsa-ca.crt <<'EOF'
 -----BEGIN CERTIFICATE-----
 MIIDSzCCAjOgAwIBAgIUdTPONst38MbxxIjstBYgJmB5cZ4wDQYJKoZIhvcNAQEL
 BQAwFjEUMBIGA1UEAwwLRWFzeS1SU0EgQ0EwHhcNMjEwNjE4MTQzMjI2WhcNMzEw
@@ -65,54 +112,7 @@ bw45O9+4WmoOES4TUVF3Oe/Mh9Ta/2nXvBJeOEGQjw==
 -----END CERTIFICATE-----
 EOF
 
-cat >/etc/docker/certs.d/registry-1.docker.io/ca.crt <<'EOF'
------BEGIN CERTIFICATE-----
-MIIDSzCCAjOgAwIBAgIUdTPONst38MbxxIjstBYgJmB5cZ4wDQYJKoZIhvcNAQEL
-BQAwFjEUMBIGA1UEAwwLRWFzeS1SU0EgQ0EwHhcNMjEwNjE4MTQzMjI2WhcNMzEw
-NjE2MTQzMjI2WjAWMRQwEgYDVQQDDAtFYXN5LVJTQSBDQTCCASIwDQYJKoZIhvcN
-AQEBBQADggEPADCCAQoCggEBAKRB+oO9eTvldeY7hbDmDcGA9aUDBQwTOaSZ/D3S
-qhMMQ5kNTjIYP/YTPtGfJ+CKydaKp/CZoqdL3oSVol078ycHTgLJBMHSyEWDtkZw
-/To0bbh/Q8ZpRVqjExbuYxDgPn70ucyeAHzUlGYMs56urhKtTvTHPljsa13EIwu0
-IJC/TXwoIZ9yv8OtazI3TWb3jLCdDb7Ej7Kq1ExjWkVNqzzh3e63TkGqTtJO/nDj
-NB1jXe27mkDuBGyAf53Jcyfvhom4ELRpQRTpsfQC6lfvK2m7sC9toGK/98vvMPko
-xQhfk6aJ/rltPLtoof4kcEZ+qntyo8SdTq37DdqkSkaK7S0CAwEAAaOBkDCBjTAd
-BgNVHQ4EFgQUNcGEQoltzOIPDv6ZPVtNbEHkItswUQYDVR0jBEowSIAUNcGEQolt
-zOIPDv6ZPVtNbEHkItuhGqQYMBYxFDASBgNVBAMMC0Vhc3ktUlNBIENBghR1M842
-y3fwxvHEiOy0FiAmYHlxnjAMBgNVHRMEBTADAQH/MAsGA1UdDwQEAwIBBjANBgkq
-hkiG9w0BAQsFAAOCAQEAd4DcPzINMA5il4/iNV5lDQwS5+o2h+dq95g+8hYPFkJg
-y4onAGcdrIWi+2vBdd4WR6i908bHNXo7Rrftn4IzesA9+3Q2U2aUgYi9p+hGy3eZ
-HhxdfAXLUnjVth+VsFas7ud5pcoN15DNMLM4qZQ6k+i8uW/WqZblimg9UfgdtfLP
-iCeAvMOe2XHyOfoAXiUXg9RItPJK12wvUw2V1OCfADnnHDaNRG9sd+xH3TaoqQsj
-sc3ysian/ruB6Sisqv3Lgd3pek7rPnvU/mw4wTACjyBnriZBhILu0/g349nyV3jF
-bw45O9+4WmoOES4TUVF3Oe/Mh9Ta/2nXvBJeOEGQjw==
------END CERTIFICATE-----
-EOF
-
-#cat >/etc/ssl/certs/ca-certificates.crt <<'EOF'
-cat >/usr/local/share/ca-certificates/registry-mirror.crt <<'EOF'
------BEGIN CERTIFICATE-----
-MIIDSzCCAjOgAwIBAgIUdTPONst38MbxxIjstBYgJmB5cZ4wDQYJKoZIhvcNAQEL
-BQAwFjEUMBIGA1UEAwwLRWFzeS1SU0EgQ0EwHhcNMjEwNjE4MTQzMjI2WhcNMzEw
-NjE2MTQzMjI2WjAWMRQwEgYDVQQDDAtFYXN5LVJTQSBDQTCCASIwDQYJKoZIhvcN
-AQEBBQADggEPADCCAQoCggEBAKRB+oO9eTvldeY7hbDmDcGA9aUDBQwTOaSZ/D3S
-qhMMQ5kNTjIYP/YTPtGfJ+CKydaKp/CZoqdL3oSVol078ycHTgLJBMHSyEWDtkZw
-/To0bbh/Q8ZpRVqjExbuYxDgPn70ucyeAHzUlGYMs56urhKtTvTHPljsa13EIwu0
-IJC/TXwoIZ9yv8OtazI3TWb3jLCdDb7Ej7Kq1ExjWkVNqzzh3e63TkGqTtJO/nDj
-NB1jXe27mkDuBGyAf53Jcyfvhom4ELRpQRTpsfQC6lfvK2m7sC9toGK/98vvMPko
-xQhfk6aJ/rltPLtoof4kcEZ+qntyo8SdTq37DdqkSkaK7S0CAwEAAaOBkDCBjTAd
-BgNVHQ4EFgQUNcGEQoltzOIPDv6ZPVtNbEHkItswUQYDVR0jBEowSIAUNcGEQolt
-zOIPDv6ZPVtNbEHkItuhGqQYMBYxFDASBgNVBAMMC0Vhc3ktUlNBIENBghR1M842
-y3fwxvHEiOy0FiAmYHlxnjAMBgNVHRMEBTADAQH/MAsGA1UdDwQEAwIBBjANBgkq
-hkiG9w0BAQsFAAOCAQEAd4DcPzINMA5il4/iNV5lDQwS5+o2h+dq95g+8hYPFkJg
-y4onAGcdrIWi+2vBdd4WR6i908bHNXo7Rrftn4IzesA9+3Q2U2aUgYi9p+hGy3eZ
-HhxdfAXLUnjVth+VsFas7ud5pcoN15DNMLM4qZQ6k+i8uW/WqZblimg9UfgdtfLP
-iCeAvMOe2XHyOfoAXiUXg9RItPJK12wvUw2V1OCfADnnHDaNRG9sd+xH3TaoqQsj
-sc3ysian/ruB6Sisqv3Lgd3pek7rPnvU/mw4wTACjyBnriZBhILu0/g349nyV3jF
-bw45O9+4WmoOES4TUVF3Oe/Mh9Ta/2nXvBJeOEGQjw==
------END CERTIFICATE-----
-EOF
-
-#cat >/etc/ssl/certs/ca-certificates.crt <<'EOF'
+# TODO: Easy-RSA server cert broken.
 cat >/usr/local/share/ca-certificates/squid-proxy.crt <<'EOF'
 -----BEGIN CERTIFICATE-----
 MIIEDzCCAvegAwIBAgIUI1EFQsfLjKbFTBedIM2sJJ6Dqd4wDQYJKoZIhvcNAQEL
@@ -148,11 +148,10 @@ update-ca-certificates 2>/dev/null
 #EOF
 #update-ca-trust
 
-## /etc/hosts
+## TODO: /etc/hosts to 192.168.122.2 named.
 grep -q "proxy.ephemeric.lan" /etc/hosts || cat >>/etc/hosts <<'EOF'
-192.168.122.2 proxy.ephemeric.lan proxy
-192.168.122.3 registry.ephemeric.lan registry
-192.168.122.4 registry.k8s.io
+192.168.122.2 proxy.ephemeric.lan
+192.168.122.3 registry.ephemeric.lan
 EOF
 
 # TODO: determine OS... do relevent tasks.
