@@ -1,21 +1,17 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-ENV["CHANNEL"] = "stable"
-
 # `config.vm.synced_folder` runs before `config.vm.provision`!
 Vagrant.configure("2") do |config|
-    # On Jasmine, my hypervisor host with all things testing...
     # Splunk.
     config.vm.network "forwarded_port", guest: 8000, guest_ip: "192.168.235.41", host: 8000, host_ip: "192.168.0.3"
-    config.vm.network "forwarded_port", guest: 8080, guest_ip: "192.168.235.101", host: 8080, host_ip: "192.168.0.3"
     # Homedir.
     if File.exists?(File.expand_path("~/upload"))
         config.vm.synced_folder "~/upload", "/vagrant/robertg", type: "rsync"
     end
-    # Proxy, useradd robertg, mv /vagrant/robertg/ ~robertg/.
     config.vm.provision :shell, inline: <<-SHELL
         cd /vagrant/
+        # TODO: split multiple scripts.
         ./robertg.sh >/dev/null
     SHELL
 end

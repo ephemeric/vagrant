@@ -47,15 +47,16 @@ EOF
 
 ## Per VM specific.
 ### Generator.
-if [[ "$1" == "generator" ]]; then
+if [[ "$1" == "generator.ephemeric.lan" ]]; then
     # To Splunk.
     (crontab -lu vagrant 2>/dev/null || true; builtin echo '* * * * * rsync -ae "ssh -i .ssh/id_ed25519 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" /vagrant/log-generator/destination splunk.ephemeric.lan:/vagrant/log-generator/ || true') | crontab -u vagrant -
 fi
 
-### master-node
-if [[ "$1" == "master-node" ]]; then
+### control-node
+if [[ "$1" == "cnode.ephemeric.lan" ]]; then
     # To worker nodes.
-    (crontab -lu vagrant 2>/dev/null || true; builtin echo '* * * * * rsync -ae "ssh -i .ssh/id_ed25519 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" /vagrant/configs worker-node01:/vagrant/ || true') | crontab -u vagrant -
+    (crontab -lu vagrant 2>/dev/null || true; builtin echo '* * * * * rsync -ae "ssh -i .ssh/id_ed25519 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" /vagrant/configs wnode01.ephemeric.lan:/vagrant/ || true') | crontab -u vagrant -
+    (crontab -lu vagrant 2>/dev/null || true; builtin echo '* * * * * rsync -ae "ssh -i .ssh/id_ed25519 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" /vagrant/configs wnode02.ephemeric.lan:/vagrant/ || true') | crontab -u vagrant -
 fi
 
 exit 0

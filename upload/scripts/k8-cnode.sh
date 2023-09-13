@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-NODENAME=$(hostname -s)
+NODENAME=$(hostname)
 
 __retval=0
 for i in {1..11}; do

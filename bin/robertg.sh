@@ -16,10 +16,10 @@ EOF
 cat >/etc/profile.d/proxy.sh <<'EOF'
 export http_proxy="http://proxy.ephemeric.lan:3128"
 export https_proxy="http://proxy.ephemeric.lan:3128"
-export no_proxy="registry.k8s.io,127.0.0.1,localhost,master-node,worker-node01,worker-node02,worker-node03,ephemeric.lan,172.16.,172.17.,172.16.1.0/16,172.17.1.0/18,192.168.235.,192.168.235.0/24"
+export no_proxy="127.0.0.1,localhost,ephemeric.lan,172.16.,172.17.,192.168.235.,172.17.0.1/16,172.16.1.0/16,172.17.1.0/18,192.168.235.0/24,10.96.0.0/12,192.168.59.0/24,192.168.49.0/24,192.168.39.0/24,192.168.0.0/24,192.168.122.0/24"
 export HTTP_PROXY="http://proxy.ephemeric.lan:3128"
 export HTTPS_PROXY="http://proxy.ephemeric.lan:3128"
-export NO_PROXY="registry.k8s.io,127.0.0.1,localhost,master-node,worker-node01,worker-node02,worker-node03,ephemeric.lan,172.16.,172.17.,172.16.1.0/16,172.17.1.0/18,192.168.235.,192.168.235.0/24"
+export NO_PROXY="127.0.0.1,localhost,ephemeric.lan,172.16.,172.17.,192.168.235.,172.17.0.1/16,172.16.1.0/16,172.17.1.0/18,192.168.235.0/24,10.96.0.0/12,192.168.59.0/24,192.168.49.0/24,192.168.39.0/24,192.168.0.0/24,192.168.122.0/24"
 EOF
 
 cat >/etc/apt/apt.conf.d/10squid-proxy <<'EOF'
@@ -112,7 +112,7 @@ bw45O9+4WmoOES4TUVF3Oe/Mh9Ta/2nXvBJeOEGQjw==
 -----END CERTIFICATE-----
 EOF
 
-# TODO: Easy-RSA server cert broken.
+# TODO: Easy-RSA proxy.ephemeric.lan broken!?
 cat >/usr/local/share/ca-certificates/squid-proxy.crt <<'EOF'
 -----BEGIN CERTIFICATE-----
 MIIEDzCCAvegAwIBAgIUI1EFQsfLjKbFTBedIM2sJJ6Dqd4wDQYJKoZIhvcNAQEL
@@ -149,10 +149,14 @@ update-ca-certificates 2>/dev/null
 #update-ca-trust
 
 ## TODO: /etc/hosts to 192.168.122.2 named.
-grep -q "proxy.ephemeric.lan" /etc/hosts || cat >>/etc/hosts <<'EOF'
-192.168.122.2 proxy.ephemeric.lan
-192.168.122.3 registry.ephemeric.lan
-EOF
+#grep -q "proxy.ephemeric.lan" /etc/hosts || cat >>/etc/hosts <<'EOF'
+##192.168.122.2 proxy.ephemeric.lan
+#192.168.122.3 registry.ephemeric.lan
+#EOF
+rm -f /etc/netplan/01-netcfg.yaml
+netplan apply
+rm -f /etc/systemd/resolved.conf
+systemctl restart systemd-resolved
 
 # TODO: determine OS... do relevent tasks.
 #dnf -y install zsh vim policycoreutils-python policycoreutils nmap telnet wget curl tcpdump

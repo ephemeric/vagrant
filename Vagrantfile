@@ -4,6 +4,7 @@
 BOX = "generic/ubuntu2204"
 VERSION = "4.2.16"
 DOMAIN = ".ephemeric.lan"
+ENV["CHANNEL"] = "stable"
 
 Vagrant.configure("2") do |config|
 
@@ -36,10 +37,8 @@ Vagrant.configure("2") do |config|
     end
 end
 
-# Squid proxy for APT mirror and Docker pull-through proxy registry cache.
 load "config/robertg"
-# Machines.
-load "config/k8"
+load "config/k8s"
 load "config/generator"
 load "config/splunk"
 load "config/vagbox"
