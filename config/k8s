@@ -44,7 +44,7 @@ Vagrant.configure("2") do |config|
         lv.memory = settings["nodes"]["control"]["memory"]
     end
 
-    cnode.vm.provision "shell", env: {"CALICO_VERSION" => settings["software"]["calico"], "CONTROL_IP" => settings["network"]["control_ip"], "POD_CIDR" => settings["network"]["pod_cidr"], "SERVICE_CIDR" => settings["network"]["service_cidr"], "DNS_SERVERS" => settings["network"]["dns_servers"].join(" "), "ENVIRONMENT" => settings["environment"], "KUBERNETES_VERSION" => settings["software"]["kubernetes"], "OS" => settings["software"]["os"], "DOMAIN" => DOMAIN}, inline: <<-SHELL
+    cnode.vm.provision "shell", env: {"CALICO_VERSION" => settings["software"]["calico"], "CONTROL_IP" => settings["network"]["control_ip"], "POD_CIDR" => settings["network"]["pod_cidr"], "SERVICE_CIDR" => settings["network"]["service_cidr"], "ENVIRONMENT" => settings["environment"], "KUBERNETES_VERSION" => settings["software"]["kubernetes"], "OS" => settings["software"]["os"], "DOMAIN" => DOMAIN}, inline: <<-SHELL
       cd /vagrant/
       ./scripts/install_setup.sh cnode$DOMAIN >/dev/null
       ./scripts/k8-common.sh >/dev/null
@@ -75,7 +75,7 @@ Vagrant.configure("2") do |config|
           lv.memory = settings["nodes"]["workers"]["memory"]
       end
 
-      node.vm.provision "shell", env: {"DNS_SERVERS" => settings["network"]["dns_servers"].join(" "), "ENVIRONMENT" => settings["environment"], "KUBERNETES_VERSION" => settings["software"]["kubernetes"], "OS" => settings["software"]["os"], "DOMAIN" => DOMAIN}, inline: <<-SHELL
+      node.vm.provision "shell", env: {"ENVIRONMENT" => settings["environment"], "KUBERNETES_VERSION" => settings["software"]["kubernetes"], "OS" => settings["software"]["os"], "DOMAIN" => DOMAIN}, inline: <<-SHELL
         cd /vagrant/
         ./scripts/install_setup.sh wnode0#{i}$DOMAIN >/dev/null
         ./scripts/k8-common.sh >/dev/null

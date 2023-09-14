@@ -44,9 +44,8 @@ chmod +x $config_path/join.sh
 
 kubeadm token create --print-join-command > $config_path/join.sh
 
-# Install Calico Network Plugin
-#curl --fail --location --connect-timeout 60 --retry-connrefused --retry 3 --retry-delay 5 --retry-max-time 60 --silent --show-error https://raw.githubusercontent.com/projectcalico/calico/v${CALICO_VERSION}/manifests/calico.yaml -O
-kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v${CALICO_VERSION}/manifests/calico.yaml
+# Calico.
+kubectl apply -f /vagrant/k8s/calico-${CALICO_VERSION}.yaml
 
 sudo -iu vagrant bash <<EOF
 mkdir -p /home/vagrant/.kube

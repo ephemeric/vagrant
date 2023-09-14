@@ -156,6 +156,8 @@ update-ca-certificates 2>/dev/null
 rm -f /etc/netplan/01-netcfg.yaml
 netplan apply
 rm -f /etc/systemd/resolved.conf
+rm -f /etc/systemd/resolved.conf.d/*
+rmdir /etc/systemd/resolved.conf.d
 systemctl restart systemd-resolved
 
 # TODO: determine OS... do relevent tasks.

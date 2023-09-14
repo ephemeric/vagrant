@@ -1,26 +1,12 @@
 #!/bin/bash
-#
-# Common setup for all servers (Control Plane and Nodes)
 
 set -Eeuo pipefail
 
 export DEBIAN_FRONTEND="noninteractive"
 __CURLOPTS="--fail --location --connect-timeout 60 --retry-connrefused --retry 3 --retry-delay 5 --retry-max-time 60 --silent --show-error"
 
-# DNS.
-if [ ! -d /etc/systemd/resolved.conf.d ]; then
-    mkdir /etc/systemd/resolved.conf.d/
-fi
-cat <<EOF | tee /etc/systemd/resolved.conf.d/dns_servers.conf
-[Resolve]
-DNS=${DNS_SERVERS}
-EOF
-
-systemctl --quiet restart systemd-resolved
-
 # Swap.
 swapoff -a
-(crontab -l 2>/dev/null; echo "@reboot /sbin/swapoff -a") | crontab - || true
 sed -i.bak -r 's/(.+ swap .+)/#\1/' /etc/fstab
 
 cat <<EOF | tee /etc/modules-load.d/crio.conf
