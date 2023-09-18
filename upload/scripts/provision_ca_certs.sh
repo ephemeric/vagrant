@@ -36,7 +36,7 @@ DNS.1 = server.ephemeric.lan
 DNS.2 = server1.ephemeric.lan
 DNS.3 = server2.ephemeric.lan
 DNS.4 = server3.ephemeric.lan
-IP.1 = 192.168.235.10
+IP.1 = 192.168.235.19
 EOF
 
 openssl x509 -req -nodes -in $MYCERT.csr -CA $CANAME.crt -CAkey $CANAME.key -CAcreateserial -out $MYCERT.crt -days 3650 -sha256 -extfile $MYCERT.v3.ext

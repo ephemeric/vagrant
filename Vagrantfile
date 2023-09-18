@@ -25,8 +25,8 @@ Vagrant.configure("2") do |config|
         l.graphics_type = "none"
         l.management_network_name = "default"
         l.management_network_keep = true
-        l.memory = 8192
-        l.cpus = 32
+        l.memory = 4096
+        l.cpus = 4
     end
 
     # VMWare.
@@ -38,7 +38,10 @@ Vagrant.configure("2") do |config|
 end
 
 load "config/robertg"
-load "config/k8s"
+load "config/microos"
+load "config/ubuntu2204"
+#load "config/k8s"
+load "config/rke2"
 load "config/generator"
 load "config/splunk"
 load "config/vagbox"

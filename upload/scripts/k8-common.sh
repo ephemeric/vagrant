@@ -3,7 +3,7 @@
 set -Eeuo pipefail
 
 export DEBIAN_FRONTEND="noninteractive"
-__CURLOPTS="--fail --location --connect-timeout 60 --retry-connrefused --retry 3 --retry-delay 5 --retry-max-time 60 --silent --show-error"
+__CURLOPTS="--fail --location --connect-timeout 60 --retry-connrefused --retry 10 --retry-delay 5 --retry-max-time 60 --silent --show-error"
 
 # Swap.
 swapoff -a

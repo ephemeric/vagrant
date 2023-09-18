@@ -34,21 +34,13 @@ Vagrant.configure("2") do |config|
     :libvirt__guest_ipv6 => false, \
     :libvirt__forward_mode => "veryisolated", \
     :libvirt__host_ip => "192.168.235.1"
-    if settings["shared_folders"]
-      settings["shared_folders"].each do |shared_folder|
-        cnode.vm.synced_folder shared_folder["host_path"], shared_folder["vm_path"]
-      end
-    end
     cnode.vm.provider "libvirt" do |lv|
         lv.cpus = settings["nodes"]["control"]["cpu"]
         lv.memory = settings["nodes"]["control"]["memory"]
     end
-
     cnode.vm.provision "shell", env: {"CALICO_VERSION" => settings["software"]["calico"], "CONTROL_IP" => settings["network"]["control_ip"], "POD_CIDR" => settings["network"]["pod_cidr"], "SERVICE_CIDR" => settings["network"]["service_cidr"], "ENVIRONMENT" => settings["environment"], "KUBERNETES_VERSION" => settings["software"]["kubernetes"], "OS" => settings["software"]["os"], "DOMAIN" => DOMAIN}, inline: <<-SHELL
       cd /vagrant/
       ./scripts/install_setup.sh cnode$DOMAIN >/dev/null
-      ./scripts/k8-common.sh >/dev/null
-      ./scripts/k8-cnode.sh >/dev/null
     SHELL
   end
 
@@ -65,26 +57,14 @@ Vagrant.configure("2") do |config|
       :libvirt__guest_ipv6 => false, \
       :libvirt__forward_mode => "veryisolated", \
       :libvirt__host_ip => "192.168.235.1"
-      if settings["shared_folders"]
-        settings["shared_folders"].each do |shared_folder|
-          node.vm.synced_folder shared_folder["host_path"], shared_folder["vm_path"]
-        end
-      end
       node.vm.provider "libvirt" do |lv|
           lv.cpus = settings["nodes"]["workers"]["cpu"]
           lv.memory = settings["nodes"]["workers"]["memory"]
       end
-
       node.vm.provision "shell", env: {"ENVIRONMENT" => settings["environment"], "KUBERNETES_VERSION" => settings["software"]["kubernetes"], "OS" => settings["software"]["os"], "DOMAIN" => DOMAIN}, inline: <<-SHELL
         cd /vagrant/
         ./scripts/install_setup.sh wnode0#{i}$DOMAIN >/dev/null
-        ./scripts/k8-common.sh >/dev/null
-        ./scripts/k8-node.sh >/dev/null
       SHELL
-      # Only install the dashboard after provisioning the last worker (and when enabled).
-      #if i == NUM_WORKER_NODES and settings["software"]["dashboard"] and settings["software"]["dashboard"] != ""
-      #  node.vm.provision "shell", path: "upload/scripts/k8-dashboard.sh"
-      #end
     end
 
   end

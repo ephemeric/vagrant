@@ -14,8 +14,8 @@ DEBIAN_FRONTEND="noninteractive" apt-get -y --quiet install apt-transport-https 
 
 ## Poor man's DNS. Robust, no server or mucking about with systemd-resolved.
 cat >>/etc/hosts <<'EOF'
-192.168.235.41 splunk.ephemeric.lan splunk
-192.168.235.43 generator.ephemeric.lan generator
+192.168.235.17 splunk.ephemeric.lan splunk
+192.168.235.11 generator.ephemeric.lan generator
 EOF
 
 ## Aliases.

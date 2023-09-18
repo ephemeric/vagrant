@@ -1,6 +1,4 @@
 #!/bin/bash
-#
-# Setup for Node servers
 
 set -euo pipefail
 
@@ -10,11 +8,6 @@ while [[ ! -f "$config_path/join.sh" ]]; do
     builtin echo "Waiting for join.sh..." >&2
     sleep 10
 done
-
-#while [[ ! -f "$config_path/config" ]]; do
-#    builtin echo "Waiting for config..." >&2
-#    sleep 5
-#done
 
 /bin/bash $config_path/join.sh -v
 
@@ -26,3 +19,5 @@ sudo chown 1000:1000 /home/vagrant/.kube/config
 NODENAME=$(hostname)
 kubectl label node $(hostname) node-role.kubernetes.io/worker=worker
 EOF
+
+exit 0

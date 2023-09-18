@@ -17,8 +17,9 @@ while sudo -i -u vagrant kubectl get pods -A -l k8s-app=metrics-server | awk 'sp
     sleep 5
 done
 
-sudo -iu vagrant kubectl apply -f /vagrant/k8s/kubernetes-dashboard-${DASHBOARD_VERSION}.yaml"
-sudo -iu vagrant kubectl -n kubernetes-dashboard get secret/kubernetes-dashboard -o go-template="{{.data.token | base64decode}}" >>"${config_path}/kubernetes-dashboard-token"
+sudo -iu vagrant kubectl apply -f /vagrant/k8s/kubernetes-dashboard-"${DASHBOARD_VERSION}".yaml
+sudo -iu vagrant kubectl apply -f /vagrant/k8s/dashboard-adminuser.yaml
+sudo -iu vagrant kubectl get secret admin-user -n kubernetes-dashboard -o jsonpath={".data.token"} | base64 -d >"${config_path}/kubernetes-dashboard-token"
 
 while sudo -i -u vagrant kubectl get pods -A -l k8s-app=kubernetes-dashboard | awk 'split($3, a, "/") && a[1] != a[2] { print $0; }' | grep -v "RESTARTS"; do
     echo 'Waiting for kubernetes-dashboard to be ready...' >&2
