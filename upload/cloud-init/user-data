@@ -1,0 +1,26 @@
+#cloud-config
+
+hostname: ubuntu1
+fqdn: ubuntu1.localdomain
+manage_etc_hosts: true
+
+ssh_pwauth: true
+disable_root: false
+
+users:
+  - name: ubuntu
+    home: /home/ubuntu
+    shell: /bin/bash
+    lock_passwd: false
+    groups: sudo
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh-authorized-keys:
+      - sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIDKHz85P9rJczwjgMjJu47/iLXBxtfqoSlHXjEnT4ZuDAAAABHNzaDo= robertg@macbook.local
+
+chpasswd:
+  list: |
+    root:root
+    ubuntu:ubuntu
+  expire: false
+runcmd:
+  - [ sh, -c, echo 192.168.100.10 cl-ubuntu | tee -a /etc/hosts]
