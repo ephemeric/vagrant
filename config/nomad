@@ -1,0 +1,73 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+require "yaml"
+settings = YAML.load_file "settings.yaml"
+
+IP_SECTIONS = settings["network"]["control_ip"].match(/^([0-9.]+\.)([^.]+)$/)
+# First 3 octets including the trailing dot:
+IP_NW = IP_SECTIONS.captures[0]
+# Last octet excluding all dots:
+IP_START = Integer(IP_SECTIONS.captures[1])
+NUM_WORKER_NODES = settings["nodes"]["workers"]["count"]
+DOMAIN = settings["network"]["domain"]
+
+Vagrant.configure("2") do |config|
+  config.vm.provision "shell", env: { "IP_NW" => IP_NW, "IP_START" => IP_START, "NUM_WORKER_NODES" => NUM_WORKER_NODES, "DOMAIN" => DOMAIN }, inline: <<-SHELL
+      echo "$IP_NW$((IP_START)) cnode$DOMAIN" >>/etc/hosts
+      for i in `seq 1 ${NUM_WORKER_NODES}`; do
+        echo "$IP_NW$((IP_START+i)) wnode0${i}$DOMAIN" >>/etc/hosts
+      done
+  SHELL
+
+  config.vm.box = settings["software"]["box"]
+
+  config.vm.define "cnode" do |cnode|
+    cnode.vm.box = BOX
+    cnode.vm.box_version = VERSION
+    cnode.vm.hostname = "cnode" + DOMAIN
+    cnode.vm.network :private_network, \
+    :ip => settings["network"]["control_ip"], \
+    :libvirt__network_name => "ephemeric", \
+    :libvirt__dhcp_enabled => false, \
+    :libvirt__always_destroy => true, \
+    :libvirt__guest_ipv6 => false, \
+    :libvirt__forward_mode => "veryisolated", \
+    :libvirt__host_ip => "192.168.235.1"
+    cnode.vm.provider "libvirt" do |lv|
+        lv.cpus = settings["nodes"]["control"]["cpu"]
+        lv.memory = settings["nodes"]["control"]["memory"]
+    end
+    cnode.vm.provision "shell", env: {"CALICO_VERSION" => settings["software"]["calico"], "CONTROL_IP" => settings["network"]["control_ip"], "POD_CIDR" => settings["network"]["pod_cidr"], "SERVICE_CIDR" => settings["network"]["service_cidr"], "ENVIRONMENT" => settings["environment"], "KUBERNETES_VERSION" => settings["software"]["kubernetes"], "OS" => settings["software"]["os"], "DOMAIN" => DOMAIN, "CNIPLUGINS_VERSION" => settings["software"]["cni-plugins"]}, inline: <<-SHELL
+      cd /vagrant/
+      ./scripts/install_setup.sh cnode$DOMAIN >/dev/null
+      ./scripts/nomad-common.sh $CNIPLUGINS_VERSION >/dev/null
+    SHELL
+  end
+
+  (1..NUM_WORKER_NODES).each do |i|
+    config.vm.define "wnode0#{i}" do |node|
+      node.vm.box = BOX
+      node.vm.box_version = VERSION
+      node.vm.hostname = "wnode0#{i}" + DOMAIN
+      node.vm.network :private_network, \
+      :ip => IP_NW + "#{IP_START + i}", \
+      :libvirt__network_name => "ephemeric", \
+      :libvirt__dhcp_enabled => false, \
+      :libvirt__always_destroy => true, \
+      :libvirt__guest_ipv6 => false, \
+      :libvirt__forward_mode => "veryisolated", \
+      :libvirt__host_ip => "192.168.235.1"
+      node.vm.provider "libvirt" do |lv|
+          lv.cpus = settings["nodes"]["workers"]["cpu"]
+          lv.memory = settings["nodes"]["workers"]["memory"]
+      end
+      node.vm.provision "shell", env: {"ENVIRONMENT" => settings["environment"], "KUBERNETES_VERSION" => settings["software"]["kubernetes"], "OS" => settings["software"]["os"], "DOMAIN" => DOMAIN, "CNIPLUGINS_VERSION" => settings["software"]["cni-plugins"]}, inline: <<-SHELL
+        cd /vagrant/
+        ./scripts/install_setup.sh wnode0#{i}$DOMAIN >/dev/null
+        ./scripts/nomad-common.sh $CNIPLUGINS_VERSION >/dev/null
+      SHELL
+    end
+
+  end
+end

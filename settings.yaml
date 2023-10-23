@@ -5,20 +5,20 @@
 environment: |
   HTTP_PROXY="http://proxy.ephemeric.lan:3128"
   HTTPS_PROXY="http://proxy.ephemeric.lan:3128"
-  NO_PROXY="127.0.0.1,localhost,ephemeric.lan,172.16.,172.17.,172.16.1.0/16,172.17.1.0/18,192.168.235.,192.168.235.0/24"
+  NO_PROXY="127.0.0.1,localhost,ephemeric.lan,172.16.,172.17.,10.244.,10.96.,172.16.1.0/16,172.17.1.0/18,192.168.235.,192.168.235.0/24"
 
 network:
   # Worker IPs are incremented from control_ip.
   control_ip: 192.168.235.50
-  pod_cidr: 172.16.1.0/16
-  service_cidr: 172.17.1.0/18
+  pod_cidr: 10.244.0.0/24
+  service_cidr: 10.96.0.0/12
   domain: .ephemeric.lan
 nodes:
   control:
     cpu: 4
     memory: 8192
   workers:
-    count: 1
+    count: 2
     cpu: 4
     memory: 8192
 software:
@@ -29,3 +29,4 @@ software:
   # `v1.27` for gpg curl, repo, `apt-get install kubeadm=1.27.5-1.1`.
   kubernetes: 1.28
   os: xUbuntu_22.04
+  cni-plugins: 1.3.0
