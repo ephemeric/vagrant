@@ -17,7 +17,7 @@ Vagrant.configure("2") do |config|
     #config.vm.provision "file", source: "upload", destination: "/tmp/"
     #
     # Cannot sync to /tmp/ as Vagrant/rsync breaks /tmp to 0775 instead of the default 1777.
-    config.vm.synced_folder "upload", "/vagrant/", type: "rsync"
+    config.vm.synced_folder "upload", "/vagrant", type: "rsync"
 
     # Libvirt.
     config.vm.provider "libvirt" do |l|
@@ -38,12 +38,14 @@ Vagrant.configure("2") do |config|
 end
 
 load "config/robertg"
-load "config/microos"
+load "config/gentoo"
 load "config/ubuntu2204"
-#load "config/k8s"
-#load "config/rke2"
 load "config/nomad"
 load "config/generator"
 load "config/splunk"
 load "config/vagbox"
 load "config/test"
+#load "config/microos"
+#load "config/k8s"
+#load "config/rke2"
+#load "config/arch"
