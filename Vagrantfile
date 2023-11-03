@@ -38,13 +38,13 @@ Vagrant.configure("2") do |config|
 end
 
 load "config/robertg"
-load "config/gentoo"
 load "config/ubuntu2204"
 load "config/nomad"
 load "config/generator"
 load "config/splunk"
 load "config/vagbox"
-load "config/test"
+#load "config/test"
+#load "config/gentoo"
 #load "config/microos"
 #load "config/k8s"
 #load "config/rke2"

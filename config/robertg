@@ -10,8 +10,7 @@ Vagrant.configure("2") do |config|
         config.vm.synced_folder "~/upload", "/vagrant/robertg", type: "rsync"
     end
     config.vm.provision :shell, inline: <<-SHELL
-        cd /vagrant/
-        # TODO: split multiple scripts.
+        cd /vagrant/robertg/
         ./robertg.sh >/dev/null
     SHELL
 end
