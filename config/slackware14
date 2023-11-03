@@ -2,10 +2,10 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-    config.vm.define "slackware" do |this|
+    config.vm.define "slackware14" do |this|
         this.vm.box = "talosthoren/slackware64-14.2"
         this.vm.box_version = "1.0"
-        this.vm.hostname = "slackware" + DOMAIN
+        this.vm.hostname = "slackware14" + DOMAIN
         this.vm.provision :shell, inline: <<-SHELL
             id
         SHELL
