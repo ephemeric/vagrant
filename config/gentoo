@@ -4,29 +4,10 @@
 Vagrant.configure("2") do |config|
     config.vm.define "gentoo" do |this|
         this.vm.box = "generic/gentoo"
-        #this.vm.box = "roboxes/gentoo"
         this.vm.box_version = "4.3.4"
         this.vm.hostname = "gentoo" + DOMAIN
-        this.vm.network :private_network, \
-        :ip => "192.168.235.20", \
-        :libvirt__network_name => "ephemeric", \
-        :libvirt__dhcp_enabled => false, \
-        :libvirt__always_destroy => true, \
-        :libvirt__guest_ipv6 => false, \
-        :libvirt__forward_mode => "veryisolated", \
-        :libvirt__host_ip => "192.168.235.1"
-        this.vm.provider "vmware_desktop" do |v|
-            v.vmx["memsize"] = "1024"
-            v.base_mac = "000c2984db32"
-            v.base_address = "192.168.235.20"
-        end
-        this.vm.provider "libvirt" do |l|
-            l.memory = 1024
-            l.cpus = 8
-        end
         this.vm.provision :shell, inline: <<-SHELL
-            cd /vagrant
-            ./scripts/install_setup.sh gentoo >/dev/null
+            id
         SHELL
     end
 end
