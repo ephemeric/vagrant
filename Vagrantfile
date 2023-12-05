@@ -22,7 +22,7 @@ Vagrant.configure("2") do |config|
     # Libvirt.
     config.vm.provider "libvirt" do |l|
         l.default_prefix = "ephemeric_"
-        l.graphics_type = "none"
+    #    l.graphics_type = "none"
         l.management_network_name = "default"
         l.management_network_keep = true
         l.memory = 4096
@@ -41,10 +41,10 @@ load "config/robertg"
 load "config/generator"
 load "config/splunk"
 load "config/vagbox"
-#load "config/ubuntu2204"
-#load "config/nomad"
-#load "config/test"
-#load "config/gentoo"
+load "config/ubuntu2204"
+load "config/nomad"
+load "config/test"
+load "config/gentoo"
 load "config/slackware14"
 load "config/slackware15"
 load "config/devuan"
