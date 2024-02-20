@@ -1,10 +1,14 @@
 #/usr/bin/env bash
 
 echo "--------------------------------"
-echo "Must be only 2 count of each IP!"
+echo "Must be only 1 count of each IP!"
 echo "--------------------------------"
-# Must be only 2 count of each IP!
-grep -irP ":ip|address" config/ | tr -d ',' | awk '{print $4}' | sort | uniq -c
+grep -orP ":ip\s=>\s\"\d+.\d+.\d+.\d+\"" config/ | sort | uniq -c
+
+echo "--------------------------------"
+echo "Must be only 1 count of each IP!"
+echo "--------------------------------"
+grep -orP "base_address\s=\s\"\d+.\d+.\d+.\d+\"" config/ | sort | uniq -c
 
 echo "------------------------------"
 echo "Must only 1 count of each MAC!"
