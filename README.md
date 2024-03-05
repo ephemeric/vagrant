@@ -93,6 +93,8 @@ qemu-img convert -f qcow2 -O qcow2 ephemeric_test.img ephemeric_test.img.new
 `pacman -Syu` breaks `vagrant-libvirt` plugin!
 
 ```
-vagrant plugin expunge --reinstall
+vagrant plugin repair
+vagrant plugin update
 vagrant plugin install vagrant-libvirt
+vagrant plugin expunge --reinstall
 ```
