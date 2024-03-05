@@ -1,0 +1,31 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+    config.vm.define "rocky9" do |this|
+        this.vm.box = "generic/rocky9"
+        this.vm.box_version = "4.3.12"
+        this.vm.hostname = "rocky9" + DOMAIN
+        this.vm.network :private_network, \
+        :ip => "192.168.235.21", \
+        :libvirt__network_name => "ephemeric", \
+        :libvirt__dhcp_enabled => false, \
+        :libvirt__always_destroy => true, \
+        :libvirt__guest_ipv6 => false, \
+        :libvirt__forward_mode => "veryisolated", \
+        :libvirt__host_ip => "192.168.235.1"
+        this.vm.provider "vmware_desktop" do |v|
+            v.vmx["memsize"] = "1024"
+            v.base_mac = "000c2984db30"
+            v.base_address = "192.168.235.21"
+        end
+        this.vm.provider "libvirt" do |l|
+            l.memory = 4096
+            l.cpus = 4
+        end
+        this.vm.provision :shell, inline: <<-SHELL
+            cd /vagrant
+            # ...
+        SHELL
+    end
+end

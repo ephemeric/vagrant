@@ -1,17 +1,17 @@
 #/usr/bin/env bash
 
 echo "--------------------------------"
-echo "Must be only 1 count of each IP!"
+echo "Vagrant: 1 count each!"
 echo "--------------------------------"
 grep -orP ":ip\s=>\s\"\d+.\d+.\d+.\d+\"" config/ | sort | uniq -c
 
 echo "--------------------------------"
-echo "Must be only 1 count of each IP!"
+echo "VMware: 1 count each!"
 echo "--------------------------------"
 grep -orP "base_address\s=\s\"\d+.\d+.\d+.\d+\"" config/ | sort | uniq -c
 
 echo "------------------------------"
-echo "Must only 1 count of each MAC!"
+echo "VMware: 1 count each!"
 echo "------------------------------"
 # Get next available MAC. Must only 1 count of each MAC!
 grep -r mac config | awk '{print $4}' | sort | uniq -c
