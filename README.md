@@ -90,11 +90,16 @@ qemu-img convert -f qcow2 -O qcow2 ephemeric_test.img ephemeric_test.img.new
 
 ## Upgrade
 
+### Arch Linux
+
 `pacman -Syu` breaks `vagrant-libvirt` plugin!
 
 ```
-vagrant plugin repair
-vagrant plugin update
 vagrant plugin install vagrant-libvirt
-vagrant plugin expunge --reinstall
+```
+
+### Ubuntu
+
+```
+sudo apt-get install vagrant-libvirt
 ```
