@@ -22,8 +22,10 @@ Vagrant.configure("2") do |config|
     # Libvirt.
     config.vm.provider "libvirt" do |l|
         l.default_prefix = "ephemeric_"
-    #    l.graphics_type = "none"
+        #l.graphics_type = "none"
+        # Network to which all VMs will be connected. If not specified the default is 'vagrant-libvirt'.
         l.management_network_name = "default"
+        # Starting from version 0.7.0, always_destroy is set to true by default for any network.
         l.management_network_keep = true
         l.memory = 4096
         l.cpus = 4
