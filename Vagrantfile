@@ -2,6 +2,7 @@
 # vi: set ft=ruby :
 
 BOX = "generic/ubuntu2204"
+# >= 4.3.0 bug: "Warning: Connection refused. Retrying..."
 VERSION = "4.2.16"
 DOMAIN = ".ephemeric.lan"
 ENV["CHANNEL"] = "stable"
@@ -40,6 +41,7 @@ Vagrant.configure("2") do |config|
 end
 
 load "config/robertg"
+load "config/arch"
 load "config/generator"
 load "config/splunk"
 load "config/vagbox"
@@ -52,7 +54,6 @@ load "config/slackware15"
 load "config/devuan"
 load "config/alma9"
 load "config/rocky9"
-load "config/arch"
 #load "config/microos"
 #load "config/k8s"
 #load "config/rke2"
