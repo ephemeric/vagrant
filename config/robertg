@@ -1,6 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+ENV["PROXY"] = true
+
 # `config.vm.synced_folder` runs before `config.vm.provision`!
 Vagrant.configure("2") do |config|
     # Splunk.
@@ -11,6 +13,7 @@ Vagrant.configure("2") do |config|
     end
     config.vm.provision :shell, inline: <<-SHELL
         cd /vagrant/robertg/
-        #./setup.sh >/dev/null
+        ./vagrant-bootstrap.sh '#{ENV["PROXY"]}'
+        mv * ~robertg/
     SHELL
 end
