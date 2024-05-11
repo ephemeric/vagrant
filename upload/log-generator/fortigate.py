@@ -1,8 +1,8 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import os
 import re
-import gzip
+#import gzip
 import shutil
 import random
 import argparse
@@ -187,6 +187,6 @@ if __name__ == '__main__':
                            outdir=args.outdir)
     if args.mode != 'live':
         forti.generate_between_dates()
-        forti.compress()
+        #forti.compress()
     else:
         forti.generate_realtime()

@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -xeuo pipefail
+
+# TODO: tidy this mess.
 
 # 2 days back by default as Azure HTTP data collector API doesn't accept older than 2 days.
 set +u
@@ -18,9 +20,11 @@ else
 fi
 set -u
 
-cd /vagrant/log-generator
+/usr/bin/env python --version
+
+echo $PATH
 
 # Can also grep by `traffic_type=forward`. We are only interested in LAN => WAN egress.
-./fortigate.py -s $(date --date="${arg_days:--2} day" '+%F') -e $(date '+%F') -c ${arg_count:-5000} -m date 2>/dev/null | grep wan | grep lan | grep -P "(sent|rcvd)byte" >destination/fortigate-traffic.log
+/vagrant/log-generator/fortigate.py -s $(date --date="${arg_days:--2} day" '+%F') -e $(date '+%F') -c ${arg_count:-5000} -m date -o /tmp/ | grep wan | grep lan | grep -P "(sent|rcvd)byte" >/tmp/fortigate-traffic.log
 
 exit 0

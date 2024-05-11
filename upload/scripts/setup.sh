@@ -9,8 +9,8 @@ fi
 cd /vagrant/
 
 ## APT.
-DEBIAN_FRONTEND="noninteractive" apt-get -y --quiet update
-DEBIAN_FRONTEND="noninteractive" apt-get -y --quiet install apt-transport-https ca-certificates curl jq
+DEBIAN_FRONTEND="noninteractive" apt-get -y update
+DEBIAN_FRONTEND="noninteractive" apt-get -y install apt-transport-https ca-certificates curl jq
 
 ## Poor man's DNS. Robust, no server or mucking about with systemd-resolved.
 cat >>/etc/hosts <<'EOF'
@@ -42,21 +42,13 @@ EOF
 ## CA cert. See `provision_ca_certs.sh`.
 #cp scripts/EphemericCA.crt /usr/local/share/ca-certificates/
 #update-ca-certificates
-# Workaround for pesky: "rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL"
-#cat scripts/EphemericCA.crt >>/etc/ssl/certs/ca-certificates.crt
 
 ## Per VM specific.
-### Generator.
-if [[ "$1" == "generator.ephemeric.lan" ]]; then
-    # To Splunk.
-    (crontab -lu vagrant 2>/dev/null || true; builtin echo '* * * * * rsync -ae "ssh -i .ssh/id_ed25519 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" /vagrant/log-generator/destination splunk.ephemeric.lan:/vagrant/log-generator/ || true') | crontab -u vagrant -
-fi
 
 ### control-node
 if [[ "$1" == "cnode.ephemeric.lan" ]]; then
     # To worker nodes.
     (crontab -lu vagrant 2>/dev/null || true; builtin echo '* * * * * rsync -ae "ssh -i .ssh/id_ed25519 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" /vagrant/configs wnode01.ephemeric.lan:/vagrant/ || true') | crontab -u vagrant -
-    (crontab -lu vagrant 2>/dev/null || true; builtin echo '* * * * * rsync -ae "ssh -i .ssh/id_ed25519 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" /vagrant/configs wnode02.ephemeric.lan:/vagrant/ || true') | crontab -u vagrant -
 fi
 
 exit 0
