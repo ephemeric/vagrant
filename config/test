@@ -1,6 +1,25 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+#require 'getoptlong'
+#opts = GetoptLong.new(
+#  [ '--custom-option', GetoptLong::OPTIONAL_ARGUMENT ]
+#)
+#customParameter=''
+#opts.ordering=(GetoptLong::REQUIRE_ORDER)   ### this line.
+#opts.each do |opt, arg|
+#  case opt
+#    when '--custom-option'
+#      customParameter=arg
+#  end
+#end
+#Vagrant.configure("2") do |config|
+#             ...
+#    config.vm.provision :shell do |s|
+#        s.args = "#{customParameter}"
+#    end
+#end
+
 Vagrant.configure("2") do |config|
     config.vm.define "test", primary: true, autostart: false do |d|
         d.vm.box = "ephemeric/vagbox"
