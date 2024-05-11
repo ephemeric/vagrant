@@ -11,7 +11,7 @@ vagrant up vagbox
 vagrant halt vagbox
 
 # Post-prep.
-sudo virt-sysprep -d ephemeric_vagbox --operations defaults,-ssh-userdir,-lvm-uuids --firstboot-command 'dpkg-reconfigure openssh-server' --run-command /vagrant/provision_cleanup.sh
+sudo virt-sysprep -d ephemeric_vagbox --operations defaults,-ssh-userdir,-lvm-uuids --firstboot-command 'dpkg-reconfigure openssh-server' --run-command /vagrant/scripts/provision_cleanup.sh
 
 # Export new box.
 sudo chmod 0644 /var/lib/libvirt/images/ephemeric_vagbox.img
