@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
-set -xeuo pipefail
+set -euo pipefail
 
-# TODO: tidy this mess.
+export DEBIAN_FRONTEND="noninteractive"
+
+apt-get -y update; apt-get -y install python3-pandas python3-geoip2 faker python3
 
 # 2 days back by default as Azure HTTP data collector API doesn't accept older than 2 days.
 set +u
