@@ -2,9 +2,7 @@
 
 set -euo pipefail
 
-export DEBIAN_FRONTEND="noninteractive"
-
-apt-get -y update; apt-get -y install python3-pandas python3-geoip2 faker python3
+pip3 install pandas geoip2 faker
 
 # 2 days back by default as Azure HTTP data collector API doesn't accept older than 2 days.
 set +u
