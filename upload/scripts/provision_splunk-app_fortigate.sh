@@ -2,8 +2,6 @@
 
 set -euo pipefail
 
-# TODO: create files in lab/splunk/apps/fortigate/.
-
 cd /vagrant/splunk/etc/apps/
 
 mkdir -p fortigate/{default,samples}
@@ -21,7 +19,7 @@ thawedPath = $SPLUNK_DB/fortigate/thaweddb
 EOF
 
 cat >inputs.conf <<'EOF'
-[monitor:///tmp/fortigate-traffic.log]
+[monitor:///vagrant/splunk/etc/apps/fortigate/samples/fortigate-traffic.log]
 disabled = false
 host = fortigate.ephemeric.lan
 index = fortigate

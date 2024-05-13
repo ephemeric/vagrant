@@ -27,10 +27,10 @@ Vagrant.configure("2") do |config|
             cd /vagrant
             ./scripts/setup.sh splunk >/dev/null
             ./scripts/install_docker_ubuntu.sh >/dev/null
-            ./scripts/provision_splunk_docker.sh >/dev/null
             ./scripts/provision_log-generator_fortigate.sh >/dev/null
-            #./scripts/provision_splunk-app_fortigate.sh >/dev/null
-            #./scripts/provision_splunk-input_hec.sh >/dev/null
+            ./scripts/provision_splunk-app_fortigate.sh >/dev/null
+            ./scripts/provision_splunk-input_hec.sh >/dev/null
+            ./scripts/provision_splunk_docker.sh >/dev/null
         SHELL
     end
 end

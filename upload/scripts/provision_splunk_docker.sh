@@ -10,8 +10,6 @@ docker run -d \
 -p 8088:8088 \
 -e "SPLUNK_START_ARGS=--accept-license" \
 -e "SPLUNK_PASSWORD=changeMeVerySoon" \
--v $PWD/scripts/:/vagrant/scripts/ \
--v $PWD/log-generator/:/vagrant/log-generator/ \
 -v $PWD/splunk/etc/:/opt/splunk/etc/ \
 --name splunk splunk/splunk:9.0
 
