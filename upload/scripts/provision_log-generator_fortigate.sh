@@ -20,6 +20,8 @@ else
 fi
 set -u
 
+mkdir -p /vagrant/splunk/etc/apps/fortigate/samples/
+
 # Can also grep by `traffic_type=forward`. We are only interested in LAN => WAN egress.
 /vagrant/log-generator/fortigate.py -s $(date --date="${arg_days:--2} day" '+%F') -e $(date '+%F') -c ${arg_count:-5000} -m date -o /tmp/ | grep wan | grep lan | grep -P "(sent|rcvd)byte" >/vagrant/splunk/etc/apps/fortigate/samples/fortigate-traffic.log
 

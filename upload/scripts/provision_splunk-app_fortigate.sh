@@ -19,7 +19,7 @@ thawedPath = $SPLUNK_DB/fortigate/thaweddb
 EOF
 
 cat >inputs.conf <<'EOF'
-[monitor:///vagrant/splunk/etc/apps/fortigate/samples/fortigate-traffic.log]
+[monitor://$SPLUNK_HOME/etc/apps/fortigate/samples/fortigate-traffic.log]
 disabled = false
 host = fortigate.ephemeric.lan
 index = fortigate
