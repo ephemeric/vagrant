@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# TODO: tidy this mess.
+# TODO: tidy and migrate to `podman`.
 
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/common.sh"
 
@@ -14,12 +14,6 @@ docker run -d \
 -v $PWD/log-generator/:/vagrant/log-generator/ \
 -v $PWD/splunk/etc/:/opt/splunk/etc/ \
 --name splunk splunk/splunk:9.0
-
-# PIP3 install modules: pandas, geoip2 and faker.
-docker exec splunk /vagrant/scripts/install_log-generator_ubuntu.sh
-
-# Loggen: script runs /vagrant/log-generator/fortigate.py.
-docker exec splunk /vagrant/scripts/provision_log-generator_fortigate.sh
 
 if [[ $? -ne 0 ]]; then
     die "Docker exit code $?"
