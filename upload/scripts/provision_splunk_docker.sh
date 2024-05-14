@@ -13,8 +13,4 @@ docker run -d \
 -v $PWD/splunk/etc/:/opt/splunk/etc/ \
 --name splunk splunk/splunk:9.0
 
-if [[ $? -ne 0 ]]; then
-    die "Docker exit code $?"
-fi
-
 exit 0
