@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-cd /var/tmp/
+cd /var/tmp/images/
 
-unxz splunk-9.0.docker.xz
-
-docker load <splunk-9.0.docker
+for __image in *.xz; do
+    docker image load -i "$__image"
+done
 
 exit 0

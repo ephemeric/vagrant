@@ -11,6 +11,6 @@ docker run -d \
 -e "SPLUNK_START_ARGS=--accept-license" \
 -e "SPLUNK_PASSWORD=changeMeVerySoon" \
 -v $PWD/splunk/etc/:/opt/splunk/etc/ \
---name splunk splunk/splunk:9.0
+--name splunk splunk/splunk:9.2.1
 
 exit 0
