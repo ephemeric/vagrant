@@ -1,10 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-#BOX = "generic/ubuntu2204"
-#VERSION = "4.2.16"
-BOX = "ephemeric/ubuntu-22.04"
-VERSION = "0.0.1"
+BOX = "generic/ubuntu2204"
+VERSION = "4.2.16"
 DOMAIN = ".ephemeric.lan"
 ENV["CHANNEL"] = "stable"
 

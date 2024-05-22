@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd /var/tmp/images/
+cd /vagrant/images/
 
 for __image in *.xz; do
     docker image load -i "$__image"
