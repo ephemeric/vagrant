@@ -1,9 +1,10 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-BOX = "generic/ubuntu2204"
-# >= 4.3.0 bug: "Warning: Connection refused. Retrying..."
-VERSION = "4.2.16"
+#BOX = "generic/ubuntu2204"
+#VERSION = "4.2.16"
+BOX = "ephemeric/ubuntu-22.04"
+VERSION = "0.0.1"
 DOMAIN = ".ephemeric.lan"
 ENV["CHANNEL"] = "stable"
 
@@ -40,11 +41,11 @@ end
 
 load "config/robertg"
 load "config/splunk"
+load "config/ubuntu2204"
 #load "config/arch"
 #load "config/vagbox"
-#load "config/ubuntu2204"
 #load "config/nomad"
-load "config/test"
+#load "config/test"
 #load "config/gentoo"
 #load "config/slackware14"
 #load "config/slackware15"
