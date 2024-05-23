@@ -6,6 +6,7 @@ Vagrant.configure("2") do |config|
         this.vm.box = BOX
         this.vm.box_version = VERSION
         this.vm.hostname = "splunk" + DOMAIN
+        this.vm.network :forwarded_port, guest: 8000, guest_ip: "192.168.235.17", host: 8000
         this.vm.network :private_network, \
         :ip => "192.168.235.17", \
         :libvirt__network_name => "ephemeric", \
