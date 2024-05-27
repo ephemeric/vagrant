@@ -2,16 +2,19 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
+
     config.vm.synced_folder '.', '/vagrant', disabled: true
     config.vm.define "alpine" do |this|
         this.vm.box = "generic/alpine318"
         this.vm.box_version = "4.3.12"
+
         # https://www.libvirt.org/formatdomain.html#direct-attachment-to-physical-interface (vepa, bridge, private, passthrough).
         this.vm.network :public_network, \
         :ip => "192.168.0.200", \
         :dev => "eth0", \
         :mode => "bridge", \
-        :type => "direct"
+        :type => "direct" \
+        :model => "virtio"
 
         #:libvirt__network_name => NETNAME, \
         #:libvirt__dhcp_enabled => false, \
@@ -19,6 +22,7 @@ Vagrant.configure("2") do |config|
         #:libvirt__guest_ipv6 => false, \
         #:libvirt__forward_mode => "none", \
         #:libvirt__host_ip => "192.168.235.1"
+ 
         this.vm.provision :shell, inline: <<-SHELL
             id
         SHELL
