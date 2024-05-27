@@ -13,7 +13,7 @@ Vagrant.configure("2") do |config|
         :ip => "192.168.0.200", \
         :dev => "eth0", \
         :mode => "bridge", \
-        :type => "direct" \
+        :type => "direct", \
         :model => "virtio"
 
         #:libvirt__network_name => NETNAME, \
