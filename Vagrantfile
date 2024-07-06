@@ -38,11 +38,11 @@ Vagrant.configure("2") do |config|
 end
 
 load "config/robertg"
-load "config/splunk"
-load "config/ubuntu2204"
-load "config/alpine"
-load "config/server2019"
-#load "config/arch"
+#load "config/splunk"
+#load "config/ubuntu2204"
+#load "config/alpine"
+#load "config/server2019"
+load "config/arch"
 #load "config/vagbox"
 #load "config/nomad"
 #load "config/test"
