@@ -2,7 +2,7 @@
 
 set -ETeuo pipefail
 
-podman build -t localhost/lyftdata/loggen:0.0.1 .
+podman build -t localhost/ephemeric/loggen:0.0.1 .
 
 exit 0
 

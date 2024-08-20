@@ -1,13 +1,10 @@
 # Systemd.
 export SYSTEMD_LESS=FRXM
-alias jless='journalctl -eu'
-alias jtail='journalctl -efu'
+alias j='journalctl -eu'
 
 # Don't ask.
 alias slob='sudo -i'
-alias robg='sudo -iu robertg'
+alias r='sudo -iu robertg'
 
-# k8s.
-alias kc='kubectl'
-alias ka='kubeadm'
-alias kl='kubelet'
+alias j='journalctl'
+alias s='systemctl'

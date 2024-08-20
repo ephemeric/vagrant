@@ -1,0 +1,2 @@
+Acquire::https::repo.ephemeric.lan::Verify-Peer "false";
+Acquire::https::repo.ephemeric.lan::Verify-Host "false";

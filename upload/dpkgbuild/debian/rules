@@ -4,6 +4,7 @@
 	dh $@
 
 override_dh_installsystemd:
-	# `--restart-after-upgrade` (default in compat 10 or later).
-	dh_installsystemd --name slob
-	dh_installsystemd --no-enable --no-start --name slob
+	dh_installsystemd --no-enable --no-start --name ephemeric
+
+override_dh_builddeb:
+	dh_builddeb -- -Znone

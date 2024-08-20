@@ -1,0 +1,20 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# These can and will override globals in Vagrantfile.
+ENV["MYVAR"] = "thisistheday"
+#ENV["CHANNEL"] = "3.5.0-dev"
+#ENV["CHANNEL"] = "3.5.0-dev.8"
+#ENV["CHANNEL"] = "dev"
+# Quote as str passed to bash.
+ENV["PROXY"] = "true"
+
+# `config.vm.synced_folder` runs before `config.vm.provision`!
+Vagrant.configure("2") do |config|
+    if File.exists?(File.expand_path("~/upload"))
+        config.vm.synced_folder "~/upload", "/vagrant/robertg", type: "rsync"
+    end
+    config.vm.provision :shell, inline: <<-SHELL
+        /vagrant/robertg/vagrant-bootstrap.sh '#{ENV["PROXY"]}'
+    SHELL
+end

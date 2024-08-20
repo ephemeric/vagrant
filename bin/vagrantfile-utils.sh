@@ -16,7 +16,7 @@ echo "----------------------------------------------------------"
 echo "For updating scripts/setup.sh which appends to /etc/hosts."
 echo "----------------------------------------------------------"
 # For updating scripts/setup.sh which appends to /etc/hosts.
-grep -ir address config | awk -F '/' '{print $2}' | awk '{print $4 " " $1}' | tr -d '"' | tr -d ':' | tr -d '#' | sed "s/$/.hotrod.local/" | sort
+grep -ir address config | awk -F '/' '{print $2}' | awk '{print $4 " " $1}' | tr -d '"' | tr -d ':' | tr -d '#' | sed "s/$/.ephemeric.local/" | sort
 
 echo "----------------------"
 echo "Vagrant port forwards."

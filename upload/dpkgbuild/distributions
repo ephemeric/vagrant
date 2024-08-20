@@ -1,0 +1,7 @@
+Origin: repo.ephemeric.com
+Label: repo.ephemeric.com
+Codename: jammy
+Architectures: amd64
+Components: main
+Description: ephemeric repo
+SignWith: 58FDA10F27931A3D2F898415116FC89BEB978CA9

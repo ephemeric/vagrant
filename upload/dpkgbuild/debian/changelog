@@ -1,0 +1,6 @@
+ephemeric (0.3.4) jammy; urgency=low
+
+  [ Vagrant User ]
+  * Vagrant automated build.
+
+ -- Robert Gabriel <vagrant@ephemeric.com>  Wed, 12 Jun 2024 15:34:44 +0000

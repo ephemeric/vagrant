@@ -1,0 +1,17 @@
+{
+    debug
+    log {
+	output  file /var/log/caddy/debug
+	format  console
+	level   DEBUG
+    }
+}
+
+https://repo.ephemeric.lan {
+  tls internal
+  root * /var/www/repo
+  file_server browse
+  log {
+    output file /var/log/caddy/repo.log
+  }
+}

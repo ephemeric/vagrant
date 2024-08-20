@@ -1,0 +1,29 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+     config.vm.define "grafana" do |this|
+         this.vm.box = BOX
+         this.vm.box_version = VERSION
+        this.vm.network :forwarded_port, guest: 3000, guest_ip: "192.168.235.32", host: 3000
+         this.vm.network :private_network, \
+         :ip => "192.168.235.32", \
+         :libvirt__network_name => NETNAME, \
+         :libvirt__dhcp_enabled => false, \
+         :libvirt__always_destroy => true, \
+         :libvirt__guest_ipv6 => false, \
+         :libvirt__forward_mode => "none", \
+         :libvirt__host_ip => "192.168.235.1"
+         this.vm.provider "vmware_desktop" do |v|
+             v.vmx["memsize"] = "2048"
+             v.base_mac = "000c2984db2a"
+             v.base_address = "192.168.235.32"
+         end
+         this.vm.provision :shell, inline: <<-SHELL
+             cd /vagrant
+             ./scripts/setup.sh grafana '#{ENV["__DOMAIN"]}'
+             ./scripts/install_docker_images.sh
+             ./scripts/provision_grafana_docker.sh
+         SHELL
+     end
+end

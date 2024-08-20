@@ -1,15 +1,15 @@
-Source: slob
+Source: ephemeric
 Section: net
 Priority: optional
-Maintainer: Robert Gabriel <slob@ephemeric.lan>
+Maintainer: Slob <support@ephemeric.com>
 Build-Depends: debhelper-compat (= 13)
 Standards-Version: 4.6.0
-Homepage: https://slob.app
+Homepage: https://ephemeric.com
 Rules-Requires-Root: no
 
-Package: slob
+Package: ephemeric
 Architecture: amd64
-Depends: ${shlibs:Depends}, ${misc:Depends}, passwd, adduser
+Depends: adduser
 Recommends: logrotate
 Suggests: apparmor
-Description: Slob is cool.
+Description: Slob

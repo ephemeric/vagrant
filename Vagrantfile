@@ -40,7 +40,7 @@ end
 load "config/robertg"
 load "config/server2019"
 #load "config/splunk"
-#load "config/ubuntu2204"
+load "config/ubuntu2204"
 #load "config/alpine"
 #load "config/arch"
 #load "config/vagbox"
