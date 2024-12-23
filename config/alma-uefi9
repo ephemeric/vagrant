@@ -1,0 +1,15 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+    config.vm.box = "almalinux/9"
+    config.vm.hostname = "almalinux9-uefi.test"
+
+    config.vm.provider "libvirt" do |libvirt|
+        libvirt.qemu_use_session = false
+        libvirt.memory = 2048
+        libvirt.loader = "/usr/share/OVMF/x64/OVMF_CODE.secboot.4m.fd"
+        libvirt.nvram = "/home/robertg/tmp/OVMF_VARS.secboot_almalinux-uefi.fd"
+        libvirt.machine_type = "q35"
+    end
+end
