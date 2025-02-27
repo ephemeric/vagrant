@@ -7,10 +7,7 @@ ENV["PROXY"] = "true"
 # `config.vm.synced_folder` runs before `config.vm.provision`!
 Vagrant.configure("2") do |config|
     config.vm.network "forwarded_port", guest: 8000, guest_ip: "192.168.235.17", host: 8000, host_ip: "192.168.0.3"
-    if File.exist?(File.expand_path("~/upload"))
-        config.vm.synced_folder "~/upload", "/vagrant/robertg", type: "rsync"
-    end
     config.vm.provision :shell, inline: <<-SHELL
-        /vagrant/robertg/vagrant-bootstrap.sh '#{ENV["PROXY"]}'
+        /vagrant/scripts/vagrant-bootstrap.sh '#{ENV["PROXY"]}'
     SHELL
 end
